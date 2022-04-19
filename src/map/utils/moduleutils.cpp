@@ -106,33 +106,37 @@ namespace moduleutils
 
     void OnZoneTick()
     {
+        TracyZoneScoped;
         for (auto* module : cppModules())
         {
-            module->OnZoneTick();
+            module->OnZoneTick(PZone);
         }
     }
 
     void OnTimeServerTick()
     {
+        TracyZoneScoped;
         for (auto* module : cppModules())
         {
             module->OnTimeServerTick();
         }
     }
 
-    void OnCharZoneIn()
+    void OnCharZoneIn(CCharEntity* PChar)
     {
+        TracyZoneScoped;
         for (auto* module : cppModules())
         {
-            module->OnCharZoneIn();
+            module->OnCharZoneIn(PChar);
         }
     }
 
-    void OnCharZoneOut()
+    void OnCharZoneOut(CCharEntity* PChar)
     {
+        TracyZoneScoped;
         for (auto* module : cppModules())
         {
-            module->OnCharZoneOut();
+            module->OnCharZoneOut(PChar);
         }
     }
 
