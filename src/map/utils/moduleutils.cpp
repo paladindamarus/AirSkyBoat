@@ -104,6 +104,38 @@ namespace moduleutils
         }
     }
 
+    void OnZoneTick()
+    {
+        for (auto* module : cppModules())
+        {
+            module->OnZoneTick();
+        }
+    }
+
+    void OnTimeServerTick()
+    {
+        for (auto* module : cppModules())
+        {
+            module->OnTimeServerTick();
+        }
+    }
+
+    void OnCharZoneIn()
+    {
+        for (auto* module : cppModules())
+        {
+            module->OnCharZoneIn();
+        }
+    }
+
+    void OnCharZoneOut()
+    {
+        for (auto* module : cppModules())
+        {
+            module->OnCharZoneOut();
+        }
+    }
+
     struct Override
     {
         std::string              filename;
