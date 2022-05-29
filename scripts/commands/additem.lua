@@ -22,7 +22,7 @@ function onTrigger(player, item, quantity, aug0, aug0val, aug1, aug1val, aug2, a
     -- validate itemId
     if item == nil then
         -- No Item Provided
-        error(player, "No ItemID given.")
+        error( player, "No ItemID given." )
         return
     elseif tonumber(item) == nil and item ~= nil then
         -- Item was provided, but was not a number.  Try text lookup.
@@ -42,16 +42,16 @@ function onTrigger(player, item, quantity, aug0, aug0val, aug1, aug1val, aug2, a
     end
 
     -- Ensure the GM has room to obtain the item...
-    if (player:getFreeSlotsCount() == 0) then
-        player:messageSpecial( ID.text.ITEM_CANNOT_BE_OBTAINED, item )
+    if player:getFreeSlotsCount() == 0 then
+        player:messageSpecial(ID.text.ITEM_CANNOT_BE_OBTAINED, itemToGet)
         return
     end
 
     -- Give the GM the item...
-    player:addItem( itemToGet, quantity, aug0, aug0val, aug1, aug1val, aug2, aug2val, aug3, aug3val, trialId )
+    player:addItem(itemToGet, quantity, aug0, aug0val, aug1, aug1val, aug2, aug2val, aug3, aug3val, trialId)
     if quantity and quantity > 1 then
-        player:messageSpecial( ID.text.ITEM_OBTAINED + 9, itemToGet , quantity )
+        player:messageSpecial(ID.text.ITEM_OBTAINED + 9, itemToGet, quantity)
     else
-        player:messageSpecial( ID.text.ITEM_OBTAINED, itemToGet )
+        player:messageSpecial(ID.text.ITEM_OBTAINED, itemToGet)
     end
 end
