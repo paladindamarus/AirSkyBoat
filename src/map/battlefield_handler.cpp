@@ -249,6 +249,7 @@ uint8 CBattlefieldHandler::RegisterBattlefield(CCharEntity* PChar, uint16 battle
             return BATTLEFIELD_RETURN_CODE_LOCKED;
         }
     }
+
     return LoadBattlefield(PChar, battlefieldId, area);
 }
 

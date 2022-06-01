@@ -132,7 +132,7 @@ namespace luautils
     auto GetCacheEntryFromFilename(std::string filename) -> sol::table;
     void OnEntityLoad(CBaseEntity* PEntity);
 
-    void  SendEntityVisualPacket(uint32 npcid, const char* command);
+    void  SendEntityVisualPacket(uint32 npcid, const char* command, uint8 range);
     void  InitInteractionGlobal();
     auto  GetZone(uint16 zoneId) -> std::optional<CLuaZone>;
     auto  GetNPCByID(uint32 npcid, sol::object const& instanceObj) -> std::optional<CLuaBaseEntity>;

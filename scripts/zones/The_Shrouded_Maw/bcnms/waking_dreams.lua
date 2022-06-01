@@ -19,7 +19,8 @@ battlefield_object.onBattlefieldInitialise = function(battlefield)
     local inst = battlefield:getArea()
     local tile = ID.npc.DARKNESS_NAMED_TILE_OFFSET + (inst - 1) * 8
     for i = tile, tile + 7 do
-        GetNPCByID(i):setAnimation(xi.anim.CLOSE_DOOR)
+        GetNPCByID(i):updateToEntireZone(xi.status.NORMAL, xi.anim.CLOSE_DOOR) -- Status must be universal
+        GetNPCByID(i):setLocalVar("Dropped", xi.anim.CLOSE_DOOR)
     end
 end
 

@@ -1036,8 +1036,10 @@ xi.bcnm.onEventUpdate = function(player, csid, option, extras)
             -- todo: check if battlefields full, check party member requirements
             return 0
         end
+
         local area = player:getLocalVar("[battlefield]area")
-        area = area + 1
+        if area == 0 then area = 1 end
+
         local battlefieldIndex = bit.rshift(option, 4)
         local battlefieldId = getBattlefieldIdByBit(player, battlefieldIndex)
         local id = battlefieldId or player:getBattlefieldID()
@@ -1048,6 +1050,8 @@ xi.bcnm.onEventUpdate = function(player, csid, option, extras)
         local partySize = 1
         switch (battlefieldId): caseof
         {
+            [704]  = function() area = math.random(1, 3) end, -- CoP 3-5, possible tile layouts
+            [706]  = function() area = math.random(1, 3) end, -- Waking Dreams, possible tile layouts
             [1290] = function() area = 2 end, -- NW_Apollyon
             [1291] = function() area = 1 end, -- SW_Apollyon
             [1292] = function() area = 4 end, -- NE_Apollyon
@@ -1063,20 +1067,25 @@ xi.bcnm.onEventUpdate = function(player, csid, option, extras)
             [1305] = function() area = 5 end, -- Central_Temenos_3rd_Floor
             [1306] = function() area = 4 end, -- Central_Temenos_4th_Floor
         }
+
         local result = xi.battlefield.returnCode.REQS_NOT_MET
+
+        -- If this is a Shrouded Maw battlefield, and the player has been assigned an area, use it instead
+        if (battlefieldId == 704 or battlefieldId == 706) and player:getLocalVar("[battlefield]area") > 0 then
+            area = player:getLocalVar("[battlefield]area")
+            print(string.format("Retrieved area var from player %s:  Area = %s", player:getName(), area))
+        end
+
+        print(string.format("Registering %s to Battlefield #%s Area %s", player:getName(), battlefieldId, area))
         result = player:registerBattlefield(id, area)
         local status = xi.battlefield.status.OPEN
+
         if result ~= xi.battlefield.returnCode.CUTSCENE then
-            if result == xi.battlefield.returnCode.INCREMENT_REQUEST then
-                if area < 3 then
-                    player:setLocalVar("[battlefield]area", area)
-                else
-                    result = xi.battlefield.returnCode.WAIT
-                    player:updateEvent(result)
-                end
-            end
+            -- No cs = not allowed into battlefield
+            player:updateEvent(result)
             return false
         else
+            player:setLocalVar("[battlefield]area", area)
             if not player:getBattlefield() then
                 player:enterBattlefield()
             end
@@ -1110,8 +1119,10 @@ xi.bcnm.onEventUpdate = function(player, csid, option, extras)
                 local alliance = player:getAlliance()
                 for _, member in pairs(alliance) do
                     if member:getZoneID() == zone and not member:hasStatusEffect(xi.effect.BATTLEFIELD) and not member:getBattlefield() then
+                        member:setLocalVar("[battlefield]area", area)
                         member:addStatusEffect(effect)
                         member:registerBattlefield(id, area, player:getID())
+                        print(string.format("Registering %s for area %s", member:getName(), area))
                     end
                 end
             end

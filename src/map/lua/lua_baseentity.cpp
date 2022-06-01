@@ -1442,7 +1442,7 @@ uint8 CLuaBaseEntity::getStatus()
 void CLuaBaseEntity::setStatus(uint8 status)
 {
     m_PBaseEntity->status = static_cast<STATUS_TYPE>(status);
-    m_PBaseEntity->updatemask |= UPDATE_HP;
+    m_PBaseEntity->updatemask |= UPDATE_STATUS;
 }
 
 /************************************************************************

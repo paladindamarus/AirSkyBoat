@@ -771,12 +771,20 @@ namespace luautils
     }
 
     // temporary solution for geysers in Dangruf_Wadi
-    void SendEntityVisualPacket(uint32 npcid, const char* command)
+    void SendEntityVisualPacket(uint32 npcid, const char* command, uint8 rangeparam = 0)
     {
         TracyZoneScoped;
+        GLOBAL_MESSAGE_TYPE range = CHAR_INRANGE;
+
+        if (rangeparam < 0 or rangeparam > 3)
+        {
+            rangeparam = 0;
+        }
+        range = (GLOBAL_MESSAGE_TYPE)rangeparam;
+
         if (CBaseEntity* PNpc = zoneutils::GetEntity(npcid, TYPE_NPC))
         {
-            PNpc->loc.zone->PushPacket(PNpc, CHAR_INRANGE, new CEntityVisualPacket(PNpc, command));
+            PNpc->loc.zone->PushPacket(PNpc, range, new CEntityVisualPacket(PNpc, command));
         }
     }
 
