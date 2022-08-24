@@ -85,7 +85,7 @@ REPLACE INTO `merits` (`meritid`, `name`, `upgrade`, `value`, `jobs`, `upgradeid
 
     -- DRK Group 1: Bash/Circle Recast Times set to era values
     (834, 'arcane_circle_recast', 5, 20, 128, 6, 12),
-    (840, 'weapon_bash_recast', 5, 10, 128, 6, 12),
+    (840, 'weapon_bash_recast', 5, 10, 128, 6, 12),  -- 840 = weapon bash effect
     -- DRK Group 2
     (2496, 'dark_seal', 5, 150, 128, 7, 38),
     (2498, 'diabolic_eye', 5, 150, 128, 7, 38),
