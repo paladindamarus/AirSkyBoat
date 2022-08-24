@@ -1140,11 +1140,13 @@ float CMobEntity::ApplyTH(int16 m_THLvl, int16 rate)
 void CMobEntity::DropItems(CCharEntity* PChar)
 {
     TracyZoneScoped;
-    // Adds an item to the treasure pool and returns true if the pool has been filled
+    // Adds an item to the treasure pool
     auto AddItemToPool = [this, PChar](uint16 ItemID, uint8 dropCount)
     {
         PChar->PTreasurePool->AddItem(ItemID, this);
-        return dropCount >= TREASUREPOOL_SIZE;
+        // This used to cap the number of drops a mob can produce at 10, but
+        // that's not the correct behavior.
+        return false; // dropCount >= TREASUREPOOL_SIZE;
     };
 
     auto UpdateDroprateOrAddToList = [&](std::vector<DropItem_t>& list, uint8 dropType, uint16 itemID, uint16 dropRate)
@@ -1208,6 +1210,12 @@ void CMobEntity::DropItems(CCharEntity* PChar)
 
         for (const DropGroup_t& group : DropList.Groups)
         {
+            uint16 total = 0;
+            for (const DropItem_t& item : group.Items)
+            {
+                total += item.DropRate;
+            }
+
             for (int16 roll = 0; roll < maxRolls; ++roll)
             {
                 // Determine if this group should drop an item and determine bonus
@@ -1217,7 +1225,7 @@ void CMobEntity::DropItems(CCharEntity* PChar)
                     // Each item in the group is given its own weight range which is the previous value to the previous value + item.DropRate
                     // Such as 2 items with drop rates of 200 and 800 would be 0-199 and 200-999 respectively
                     uint16 previousRateValue = 0;
-                    uint16 itemRoll          = xirand::GetRandomNumber(1000);
+                    uint16 itemRoll          = xirand::GetRandomNumber(total);
                     for (const DropItem_t& item : group.Items)
                     {
                         if (previousRateValue + item.DropRate > itemRoll)

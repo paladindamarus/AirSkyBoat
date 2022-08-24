@@ -16,8 +16,10 @@ zone_object.onInitialize = function(zone)
     UpdateNMSpawnPoint(ID.mob.VRTRA)
     GetMobByID(ID.mob.VRTRA):setRespawnTime(math.random(86400, 259200))
 
-    UpdateNMSpawnPoint(ID.mob.BARBASTELLE)
-    GetMobByID(ID.mob.BARBASTELLE):setRespawnTime(math.random(1800, 5400))
+    if xi.settings.main.ENABLE_WOTG == 1 then
+        UpdateNMSpawnPoint(ID.mob.BARBASTELLE)
+        GetMobByID(ID.mob.BARBASTELLE):setRespawnTime(math.random(1800, 5400))
+    end
 
     xi.treasure.initZone(zone)
 end
@@ -47,6 +49,15 @@ zone_object.onEventUpdate = function(player, csid, option)
 end
 
 zone_object.onEventFinish = function(player, csid, option)
+end
+
+zone_object.onGameHour = function(zone)
+    -- Don't allow Ankou to spawn outside of night
+    if VanadielHour() >= 4 and VanadielHour() < 20 then
+        DisallowRespawn(ID.mob.ANKOU, true)
+    else
+        DisallowRespawn(ID.mob.ANKOU, false)
+    end
 end
 
 return zone_object

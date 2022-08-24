@@ -83,7 +83,14 @@ CMagicState::CMagicState(CBattleEntity* PEntity, uint16 targid, SpellID spellid,
     actionTarget.speceffect = SPECEFFECT::NONE;
     actionTarget.animation  = 0;
     actionTarget.param      = static_cast<uint16>(m_PSpell->getID());
-    actionTarget.messageID  = 327;                                                                                              // starts casting
+    if (m_PEntity->objtype == TYPE_MOB)
+    {
+        actionTarget.messageID = 3; // starts casting
+    }
+    else
+    {
+        actionTarget.messageID = 327; // starts casting on <target>
+    }
     m_PEntity->PAI->EventHandler.triggerListener("MAGIC_START", CLuaBaseEntity(m_PEntity), CLuaSpell(m_PSpell.get()), &action); // TODO: weaponskill lua object
 
     m_PEntity->loc.zone->PushPacket(m_PEntity, CHAR_INRANGE_SELF, new CActionPacket(action));
@@ -328,6 +335,11 @@ void CMagicState::ApplyEnmity(CBattleEntity* PTarget, int ce, int ve)
     if (m_PSpell->isNa())
     {
         m_PEntity->addModifier(Mod::ENMITY, -(m_PEntity->getMod(Mod::DIVINE_BENISON) >> 1)); // Half of divine benison mod amount = -enmity
+    }
+    // Subtle Sorcery sets Cumulative Enmity of spells to 0
+    if (m_PEntity->StatusEffectContainer->HasStatusEffect(EFFECT_SUBTLE_SORCERY))
+    {
+        ce = 0;
     }
 
     if (PTarget != nullptr)

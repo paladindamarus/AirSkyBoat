@@ -428,6 +428,7 @@ namespace itemutils
                         ((CItemWeapon*)PItem)->setILvlSkill(sql->GetUIntData(26));
                         ((CItemWeapon*)PItem)->setILvlParry(sql->GetUIntData(27));
                         ((CItemWeapon*)PItem)->setILvlMacc(sql->GetUIntData(28));
+                        ((CItemWeapon*)PItem)->setBaseDelay(sql->GetUIntData(29));
                         ((CItemWeapon*)PItem)->setDelay((sql->GetIntData(29) * 1000) / 60);
                         ((CItemWeapon*)PItem)->setDamage(sql->GetUIntData(30));
                         ((CItemWeapon*)PItem)->setDmgType(static_cast<DAMAGE_TYPE>(sql->GetUIntData(31)));
@@ -542,7 +543,7 @@ namespace itemutils
 
     void LoadDropList()
     {
-        int32 ret = sql->Query("SELECT dropId, itemId, dropType, itemRate, groupId, groupRate FROM mob_droplist WHERE dropid < %u;", MAX_DROPID);
+        int32 ret = sql->Query("SELECT dropId, itemId, dropType, itemRate, groupId, groupRate FROM mob_droplist WHERE dropid < %u ORDER BY dropId, dropType, groupId;", MAX_DROPID);
 
         if (ret != SQL_ERROR && sql->NumRows() != 0)
         {

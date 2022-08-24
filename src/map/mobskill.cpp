@@ -63,26 +63,15 @@ bool CMobSkill::isSingle() const
     return m_Aoe == 0;
 }
 
-bool CMobSkill::isTwoHour() const
+bool CMobSkill::isTpFreeSkill() const
 {
-    // flag means this skill is a real two hour
-    return m_Flag & SKILLFLAG_TWO_HOUR;
+    // Do not remove users TP when using the skill
+    return m_Flag & SKILLFLAG_NO_TP_COST;
 }
 
-bool CMobSkill::isAttackReplacement() const
+bool CMobSkill::isAstralFlow() const
 {
-    return m_Flag & SKILLFLAG_REPLACE_ATTACK;
-}
-
-bool CMobSkill::isTpSkill() const
-{
-    return !isSpecial() && !isAttackReplacement();
-}
-
-bool CMobSkill::isSpecial() const
-{
-    // means it is a ranged attack or call beast, etc..
-    return m_Flag & SKILLFLAG_SPECIAL;
+    return m_Flag & SKILLFLAG_ASTRAL_FLOW;
 }
 
 bool CMobSkill::isBloodPactRage() const
@@ -245,6 +234,14 @@ uint16 CMobSkill::getPetAnimationID() const
         return 144;
     if (m_AnimID == 918) // Diabolos Nightmare
         return 146;
+    if (m_AnimID == 1125) // Diabolos Ruinous Omen
+        return 149;
+    if (m_AnimID == 1126) // Diabolos Somnolence
+        return 142;
+    if (m_AnimID == 1127) // Diabolos Dream Shroud
+        return 145;
+    if (m_AnimID == 1129) // Diabolos Nether Blast
+        return 148;
     //  return 147; pet animationID 147 is an unused Diabolos aoe move encircling him in red rings/script
 
     return m_AnimID;

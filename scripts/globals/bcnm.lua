@@ -24,8 +24,8 @@ local battlefields =
     [xi.zone.BEARCLAW_PINNACLE] =
     {
         { 0,  640,    0},   -- Flames of the Dead (PM5-3 U3)
-     -- { 1,  641,    0},   -- Follow the White Rabbit (ENM)
-     -- { 2,  642,    0},   -- When Hell Freezes Over (ENM)
+        { 1,  641,    0},   -- Follow the White Rabbit (ENM)
+        { 2,  642,    0},   -- When Hell Freezes Over (ENM)
         { 3,  643,    0},   -- Brothers (ENM)
         { 4,  644,    0},   -- Holy Cow (ENM)
      -- { 5,    ?, 3454},   -- Taurassic Park (HKC30)
@@ -34,7 +34,7 @@ local battlefields =
     [xi.zone.BONEYARD_GULLY] =
     {
         { 0,  672,    0},   -- Head Wind (PM5-3 U2)
-     -- { 1,  673,    0},   -- Like the Wind (ENM) -- TODO: mob constantly runs during battle
+        { 1,  673,    0},   -- Like the Wind (ENM)
         { 2,  674,    0},   -- Sheep in Antlion's Clothing (ENM)
         { 3,  675,    0},   -- Shell We Dance? (ENM)
      -- { 4,  676,    0},   -- Totentanz (ENM)
@@ -47,7 +47,7 @@ local battlefields =
     [xi.zone.THE_SHROUDED_MAW] =
     {
         { 0,  704,    0},   -- Darkness Named (PM3-5)
-     -- { 1,  705,    0},   -- Test Your Mite (ENM)
+        { 1,  705,    0},   -- Test Your Mite (ENM)
         { 2,  706,    0},   -- Waking Dreams (Quest)
      -- { 3,    ?,    0},   -- *Waking Dreams (HTMBF)
     },
@@ -56,30 +56,30 @@ local battlefields =
     {
         { 0,  736,    0},   -- A Century of Hardship (PM5-3 L3)
      -- { 1,  737,    0},   -- Return to the Depths (Quest)
-     -- { 2,  738,    0},   -- Bionic Bug (ENM)
+        { 2,  738,    0},   -- Bionic Bug (ENM)
      -- { 3,  739,    0},   -- Pulling the Strings (ENM)
-     -- { 4,  740,    0},   -- Automaton Assault (ENM)
+        { 4,  740,    0},   -- Automaton Assault (ENM)
      -- { 5,  741, 3455},   -- The Mobline Comedy (HKC50)
     },
 
     [xi.zone.SPIRE_OF_HOLLA] =
     {
         { 0,  768,    0},   -- Ancient Flames Beckon (PM1-3)
-     -- { 1,  769,    0},   -- Simulant (ENM)
+        { 1,  769,    0},   -- Simulant (ENM)
      -- { 2,  770, 3351},   -- Empty Hopes (KC30)
     },
 
     [xi.zone.SPIRE_OF_DEM] =
     {
         { 0,  800,    0},   -- Ancient Flames Beckon (PM1-3)
-     -- { 1,  801,    0},   -- You Are What You Eat (ENM)
+        { 1,  801,    0},   -- You Are What You Eat (ENM)
      -- { 2,  802, 3351},   -- Empty Dreams (KC30)
     },
 
     [xi.zone.SPIRE_OF_MEA] =
     {
         { 0,  832,    0},   -- Ancient Flames Beckon (PM1-3)
-     -- { 1,  833,    0},   -- Playing Host (ENM)
+        { 1,  833,    0},   -- Playing Host (ENM)
      -- { 2,  834, 3351},   -- Empty Desires (KC30)
     },
 
@@ -105,10 +105,10 @@ local battlefields =
     {
         { 0,  960,    0},   -- Ancient Vows (PM2-5)
         { 1,  961,    0},   -- The Savage (PM4-2)
-     -- { 2,  962,    0},   -- Fire in the Sky (ENM)
-     -- { 3,  963,    0},   -- Bad Seed (ENM)
-     -- { 4,  964,    0},   -- Bugard in the Clouds (ENM)
-     -- { 5,  965,    0},   -- Beloved of the Atlantes (ENM)
+        { 2,  962,    0},   -- Fire in the Sky (ENM)
+        { 3,  963,    0},   -- Bad Seed (ENM)
+        { 4,  964,    0},   -- Bugard in the Clouds (ENM)
+        { 5,  965,    0},   -- Beloved of the Atlantes (ENM)
         { 6,  966,    0},   -- Uninvited Guests (Quest)
      -- { 7,  967, 3455},   -- Nest of Nightmares (HKC50)
      -- { 8,    ?,    0},   -- *The Savage (HTMBF)
@@ -248,7 +248,7 @@ local battlefields =
         {10,   10, 1552},   -- Dropping Like Flies (BS30)
         {11,   11, 1553},   -- Horns of War (KS99)
         {12,   12, 1131},   -- Under Observation (BS40)
-        {13,   13, 1177},   -- Eye of the Tiger (BS50) -- TODO: Crossthrash mobskill
+        {13,   13, 1177},   -- Eye of the Tiger (BS50)
      -- {14,   14, 1130},   -- Shots in the Dark (BS60) -- TODO: Warmachine combat behavior
         {15,   15, 1175},   -- Double Dragonian (KS30) -- TODO: Chaos Blade strengthens after 2hr
         {16,   16, 1178},   -- Today's Horoscope (KS30)
@@ -269,9 +269,9 @@ local battlefields =
     {
         { 0,   32,    0},   -- Save the Children (Sandy 1-3)
         { 1,   33,    0},   -- The Holy Crest (Quest)
-        { 2,   34, 1551},   -- Wings of Fury (BS20) -- TODO: mobskills Slipstream and Turbulence
+        { 2,   34, 1551},   -- Wings of Fury (BS20)
         { 3,   35, 1552},   -- Petrifying Pair (BS30)
-        { 4,   36, 1552},   -- Toadal Recall (BS30) -- TODO: shroom-in-cap mechanic
+        { 4,   36, 1552},   -- Toadal Recall (BS30)
      -- { 5,   37,    0},   -- Mirror, Mirror (Quest)
     },
 
@@ -295,7 +295,7 @@ local battlefields =
         {15,   79, 1130},   -- Up in Arms (BS60)
         {16,   80, 1175},   -- Copycat (KS30)
         {17,   81, 1178},   -- Operation Desert Swarm (KS30)
-     -- {18,   82, 1180},   -- Prehistoric Pigeons (KS30) -- TODO: Build resistance to sleep quickly. When one dies, remaining ones become more powerful.
+        {18,   82, 1180},   -- Prehistoric Pigeons (KS30)
      -- {19,   83, 3351},   -- The Palborough Project (KC30)
      -- {20,   84, 3352},   -- Shell Shocked (KC50)
         {21,   85,    0},   -- Beyond Infinity (Quest)
@@ -324,7 +324,7 @@ local battlefields =
         {11,  107, 1553},   -- Early Bird Catches the Wyrm (KS99)
         {12,  108, 1131},   -- Royal Succession (BS40)
         {13,  109, 1177},   -- Rapid Raptors (BS50)
-        {14,  110, 1130},   -- Wild Wild Whiskers (BS60) -- TODO: should use petrifactive breath more often than other mobskill. Message before spellcasting.
+        {14,  110, 1130},   -- Wild Wild Whiskers (BS60)
         {15,  111, 1175},   -- Seasons Greetings (KS30)
      -- {16,  112, 1178},   -- Royale Ramble (KS30)
         {17,  113, 1180},   -- Moa Constrictors (KS30)
@@ -363,7 +363,7 @@ local battlefields =
     {
         { 0,  160,    0},   -- The Shadow Lord Battle (Mission 5-2)
         { 1,  161,    0},   -- Where Two Paths Converge (Basty 9-2)
-     -- { 2,  162, 1130},   -- Kindred Spirits (BS60)
+        { 2,  162, 1130},   -- Kindred Spirits (BS60)
         { 3,  163, 2557},   -- Survival of the Wisest (SCH LB5)
      -- { 4,  164,    0},   -- Smash! A Malevolent Menace (MKD14)
      -- { 5,    ?, 4063},   -- *Kindred Spirits (SKC20)
@@ -482,14 +482,14 @@ local battlefields =
         { 6,  518, 1433},   -- Shattering Stars (DRK LB5)
         { 7,  519, 1435},   -- Shattering Stars (BRD LB5)
         { 8,  520, 1130},   -- Demolition Squad (BS60)
-     -- { 9,  521, 1552},   -- Die by the Sword (BS30) -- TODO: mob damage type rotation mobskills furious flurry, smite of fury, whispers of ire
+        { 9,  521, 1552},   -- Die by the Sword (BS30)
         {10,  522, 1552},   -- Let Sleeping Dogs Die (BS30)
         {11,  523, 1130},   -- Brothers D'Aurphe (BS60)
         {12,  524, 1131},   -- Undying Promise (BS40) -- TODO: model size increases with each reraise
-        {13,  525, 1131},   -- Factory Rejects (BS40) -- TODO: dolls grow size/power based on hidden timer. (wikis disagree on TP moves? factory immune? factory model?)
+        {13,  525, 1131},   -- Factory Rejects (BS40)
         {14,  526, 1177},   -- Idol Thoughts (BS50)
-        {15,  527, 1177},   -- An Awful Autopsy (BS50) -- TODO: mobskill Infernal Pestilence
-     -- {16,  528, 1130},   -- Celery (BS60) -- TODO: mobs do not have their specific weaknesses. mobskill Bane.
+        {15,  527, 1177},   -- An Awful Autopsy (BS50)
+        {16,  528, 1130},   -- Celery (BS60)
      -- {17,  529,    0},   -- Mirror Images (Quest)
         {18,  530, 2556},   -- A Furious Finale (DNC LB5)
      -- {19,  531,    0},   -- Clash of the Comrades (Quest)
@@ -558,6 +558,15 @@ local function checkReqs(player, npc, bfid, registrant)
 
     local function getEntranceOffset(offset)
         return zones[player:getZoneID()].npc.ENTRANCE_OFFSET + offset
+    end
+
+    local function sameRace()
+        for _, v in pairs(player:getParty()) do
+            if v:getRace() ~= player:getRace() then
+                return false
+            end
+        end
+        return true
     end
 
     -- Requirements to register a battlefield
@@ -650,7 +659,7 @@ local function checkReqs(player, npc, bfid, registrant)
         [ 736] = function() return ( cop == mi.cop.THREE_PATHS and player:getMissionStatus(xi.mission.log_id.COP, xi.mission.status.COP.LOUVERANCE) == 8                   ) end, -- PM5-3 L3: A Century of Hardship
         [ 738] = function() return ( player:hasKeyItem(xi.ki.SHAFT_2716_OPERATING_LEVER)                                                                                   ) end, -- ENM: Bionic Bug
         [ 739] = function() return ( player:hasKeyItem(xi.ki.SHAFT_GATE_OPERATING_DIAL)                                                                                    ) end, -- ENM: Pulling Your Strings
-        [ 740] = function() return ( player:hasKeyItem(xi.ki.SHAFT_GATE_OPERATING_DIAL)                                                                                    ) end, -- ENM: Automaton Assault
+        [ 740] = function() return ( player:hasKeyItem(xi.ki.SHAFT_GATE_OPERATING_DIAL) and sameRace()                                                                     ) end, -- ENM: Automaton Assault
         [ 768] = function() return ( (cop == mi.cop.BELOW_THE_ARKS) or (cop == mi.cop.THE_MOTHERCRYSTALS and not player:hasKeyItem(xi.ki.LIGHT_OF_HOLLA))                  ) end, -- PM1-3: The Mothercrystals
         [ 769] = function() return ( player:hasKeyItem(xi.ki.CENSER_OF_ABANDONMENT)                                                                                        ) end, -- ENM: Simulant
         [ 800] = function() return ( (cop == mi.cop.BELOW_THE_ARKS) or (cop == mi.cop.THE_MOTHERCRYSTALS and not player:hasKeyItem(xi.ki.LIGHT_OF_DEM))                    ) end, -- PM1-3: The Mothercrystals

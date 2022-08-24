@@ -793,6 +793,8 @@ xi.effect =
     MOBILIZATION             = 627,
     HOVER_SHOT               = 628,
     MOOGLE_AMPLIFIER         = 629,
+    TAINT                    = 630,
+    HAUNT                    = 631,
 
     -- Effect icons in packet can go from 0-767, so no custom effects should go in that range.
 
@@ -1256,6 +1258,8 @@ xi.mod =
     BOLSTER_EFFECT                  = 1028, -- Adds bonus duration as +N seconds
     LIFE_CYCLE_EFFECT               = 1029, -- Adds bonus HP% returned to the luopan when using Life Cycle
     AURA_SIZE                       = 1030, -- Used to extend aura size, the formula is 6.25 + (PEntity->getMod(Mod::AURA_SIZE) / 100) so adding 100 will make this 7.25
+
+    WYRMAL_ABJ_KILLER_EFFECT  = 53, -- Wyrmal Abjuration (Crimson/Blood) which makes players susceptible to Dragon Killer effects
 
     -- Rune Fencer
     ENHANCES_BATTUTA            = 1004, -- Used by RUN merit point cat 2 to add +N% bonus damage to parry spikes during Battuta effect
@@ -2458,10 +2462,10 @@ xi.mobMod =
     SPELL_LIST          = 27, -- set spell list
     EXP_BONUS           = 28, -- bonus exp (bonus / 100) negative values reduce exp.
     ASSIST              = 29, -- mobs will assist me
-    SPECIAL_SKILL       = 30, -- give special skill
+    SPECIAL_SKILL       = 30, -- give special skill (example: Gigas boulder ranged attack)
     ROAM_DISTANCE       = 31, -- distance allowed to roam from spawn
     -- 32 Available for use
-    SPECIAL_COOL        = 33, -- cool down for special
+    SPECIAL_COOL        = 33, -- cool down for special (example: Time between Gigas boulder ranged attacks)
     MAGIC_COOL          = 34, -- cool down for magic
     STANDBACK_COOL      = 35, -- cool down time for standing back (casting spell while not in attack range)
     ROAM_COOL           = 36, -- cool down time in seconds after roaming
