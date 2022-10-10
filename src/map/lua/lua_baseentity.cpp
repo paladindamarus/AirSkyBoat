@@ -14982,6 +14982,77 @@ void CLuaBaseEntity::clearActionQueue()
     }
 }
 
+void CLuaBaseEntity::setMannequinPose(uint16 itemID, uint8 race, uint8 pose)
+{
+    TracyZoneScoped;
+    // Find the item in the player inventory and update the extra values
+    auto*  PChar = dynamic_cast<CCharEntity*>(m_PBaseEntity);
+    CItem* PItem = nullptr;
+
+    for (uint8 i = 0; i < CONTAINER_ID::MAX_CONTAINER_ID; ++i)
+    {
+        if (auto slot = PChar->getStorage(i)->SearchItem(itemID); slot != ERROR_SLOTID)
+        {
+            auto* item = PChar->getStorage(i)->GetItem(slot);
+            if (item && item->getID() == itemID && item->isMannequin())
+            {
+                PItem = item;
+                break;
+            }
+        }
+    }
+
+    auto* PMannequin = dynamic_cast<CItemFurnishing*>(PItem);
+
+    if (PMannequin)
+    {
+        PMannequin->setMannequinRace(race);
+        PMannequin->setMannequinPose(pose);
+
+        // Include the update right into the database
+        char        extra[sizeof(PMannequin->m_extra) * 2 + 1];
+        const char* fmtQuery = "UPDATE char_inventory  \
+                               SET extra = '%s' \
+                               WHERE charid = %u AND itemId = %u;";
+
+        sql->EscapeStringLen(extra, (const char*)PMannequin->m_extra, sizeof(PMannequin->m_extra));
+        if (sql->Query(fmtQuery, extra, PChar->id, PMannequin->getID()) == SQL_ERROR)
+        {
+            ShowError("lua_baseentity::setMannequinPose: Cannot insert item to database");
+            delete PItem;
+        }
+    }
+}
+
+uint8 CLuaBaseEntity::getMannequinPose(uint16 itemID)
+{
+    TracyZoneScoped;
+
+    auto*  PChar = dynamic_cast<CCharEntity*>(m_PBaseEntity);
+    CItem* PItem = nullptr;
+
+    for (uint8 i = 0; i < CONTAINER_ID::MAX_CONTAINER_ID; ++i)
+    {
+        if (auto slot = PChar->getStorage(i)->SearchItem(itemID); slot != ERROR_SLOTID)
+        {
+            auto* item = PChar->getStorage(i)->GetItem(slot);
+            if (item && item->getID() == itemID && item->isMannequin())
+            {
+                PItem = item;
+                break;
+            }
+        }
+    }
+
+    auto* PMannequin = dynamic_cast<CItemFurnishing*>(PItem);
+
+    if (PMannequin)
+    {
+        return PMannequin->getMannequinPose();
+    }
+
+    return 0;
+}
 //==========================================================//
 
 void CLuaBaseEntity::Register()
@@ -15774,6 +15845,9 @@ void CLuaBaseEntity::Register()
     SOL_REGISTER("getChocoboRaisingInfo", CLuaBaseEntity::getChocoboRaisingInfo);
     SOL_REGISTER("setChocoboRaisingInfo", CLuaBaseEntity::setChocoboRaisingInfo);
     SOL_REGISTER("deleteRaisedChocobo", CLuaBaseEntity::deleteRaisedChocobo);
+
+    SOL_REGISTER("setMannequinPose", CLuaBaseEntity::setMannequinPose);
+    SOL_REGISTER("getMannequinPose", CLuaBaseEntity::getMannequinPose);
 }
 
 std::ostream& operator<<(std::ostream& os, const CLuaBaseEntity& entity)
