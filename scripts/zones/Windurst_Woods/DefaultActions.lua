@@ -13,6 +13,8 @@ return {
     ['Nanaa_Mihgo']  = { event = 76 },
     ['Perih_Vashai'] = { event = 338 },
     ['Roberta']      = { event = 436 },
+    ['Cheh_Raihah']  = { event = 73 },
+    ['Varun']        = { event = 432 },
     ['Sola_Jaab']    = { event = 109 },
     ['Tih_Pikeh']    = { event = 106 },
 }
