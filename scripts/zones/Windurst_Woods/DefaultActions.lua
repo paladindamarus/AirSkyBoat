@@ -6,6 +6,7 @@ return {
     ['Apururu']      = { event = 274 },
     ['Bopa_Greso']   = { event = 77 },
     ['Cha_Lebagta']  = { event = 78 },
+    ['Cheh_Raihah']  = { event = 73 },
     ['Hae_Jakkya']   = { event = 41 },
     ['Kototo']       = { event = 410 },
     ['Mourices']     = { event = 441 },
@@ -14,4 +15,6 @@ return {
     ['Roberta']      = { event = 436 },
     ['Cheh_Raihah']  = { event = 73 },
     ['Varun']        = { event = 432 },
+    ['Sola_Jaab']    = { event = 109 },
+    ['Tih_Pikeh']    = { event = 106 },
 }
