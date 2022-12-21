@@ -4017,6 +4017,7 @@ xi.items =
     XIPHOS                          = 16530,
     ANCIENT_SWORD                   = 16533,
     BRONZE_SWORD                    = 16535,
+    IRON_SWORD                      = 16536,
     SPATHA                          = 16565,
     CURTANA                         = 16575,
     CLAYMORE                        = 16583,
