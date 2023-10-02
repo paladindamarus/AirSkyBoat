@@ -132,6 +132,7 @@ enum MSGSERVTYPE : uint8
     MSG_LOGIN,
     MSG_CHAT_TELL,
     MSG_CHAT_PARTY,
+    MSG_CHAT_ALLIANCE,
     MSG_CHAT_LINKSHELL,
     MSG_CHAT_UNITY,
     MSG_CHAT_YELL,
@@ -140,7 +141,9 @@ enum MSGSERVTYPE : uint8
     MSG_PT_INV_RES,
     MSG_PT_RELOAD,
     MSG_PT_DISBAND,
+    MSG_ALLIANCE_RELOAD,
     MSG_ALLIANCE_DISSOLVE,
+    MSG_PLAYER_KICK,
     MSG_DIRECT,
     MSG_LINKSHELL_RANK_CHANGE,
     MSG_LINKSHELL_REMOVE,
@@ -196,6 +199,18 @@ enum CONQUESTMSGTYPE : uint8
     CONQUEST_MAP2WORLD_ADD_INFLUENCE_POINTS,
 };
 
+enum BESIEGEDMSGTYPE : uint8
+{
+    // WORLD --------> MAP
+
+    // World map broadcasts stronghold info to all zones.
+    BESIEGED_WORLD2MAP_STRONGHOLD_INFO,
+
+    // MAP ----------> WORLD
+
+    // TODO: Fill up Map 2 World Messages
+};
+
 constexpr auto msgTypeToStr = [](uint8 msgtype)
 {
     switch (msgtype)
@@ -206,6 +221,8 @@ constexpr auto msgTypeToStr = [](uint8 msgtype)
             return "MSG_CHAT_TELL";
         case MSG_CHAT_PARTY:
             return "MSG_CHAT_PARTY";
+        case MSG_CHAT_ALLIANCE:
+            return "MSG_CHAT_ALLIANCE";
         case MSG_CHAT_LINKSHELL:
             return "MSG_CHAT_LINKSHELL";
         case MSG_CHAT_UNITY:
@@ -222,8 +239,12 @@ constexpr auto msgTypeToStr = [](uint8 msgtype)
             return "MSG_PT_RELOAD";
         case MSG_PT_DISBAND:
             return "MSG_PT_DISBAND";
+        case MSG_ALLIANCE_RELOAD:
+            return "MSG_ALLIANCE_RELOAD";
         case MSG_ALLIANCE_DISSOLVE:
             return "MSG_ALLIANCE_DISSOLVE";
+        case MSG_PLAYER_KICK:
+            return "MSG_PLAYER_KICK";
         case MSG_DIRECT:
             return "MSG_DIRECT";
         case MSG_LINKSHELL_RANK_CHANGE:
