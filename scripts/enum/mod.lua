@@ -410,6 +410,7 @@ xi.mod =
     CARBUNCLE_LVL_BONUS             = 1041, -- Carbuncle: Lv.+ (Increases Carbuncle's base level above 99)
     CAIT_SITH_LVL_BONUS             = 1042, -- Cait Sith: Lv.+ (Increases Cait Sith's base level above 99)
     ENHANCES_MANA_CEDE              = 74,   -- Bonus % to Mana Cede effect, +1 = 1%
+    SUMMONING_MAGIC_CAST            = 1078, -- Summoning magic casting time reduction in seconds
     PERPETUATION_REDUCTION          = 346,
     SPIRIT_SPELLCAST_DELAY          = 1179, -- Reduces the time between spellcasts of a summoned spirit by seconds provided
 
@@ -943,6 +944,8 @@ xi.mod =
     -- New ASB section created per PR comment, starting at 2000
     TANDEM_STRIKE = 2000, -- Beastmaster trait - provides acc/macc to master and pet when both engage the same target
     TANDEM_BLOW   = 2001, -- Beastmaster trait - provides subtle blow to master and pet when both engage the same target
+    INVISIBLE_EQUIP_BOOST = 2002, -- boost for invisible duration (base of 0 means no change, 50 means 50% boost in duration, -50 means 50% reduction in duration)
+    SNEAK_EQUIP_BOOST = 2003, -- boost for invisible duration (base of 0 means no change, 50 means 50% boost in duration, -50 means 50% reduction in duration)
 
     -- IF YOU ADD ANY NEW MODIFIER HERE, ADD IT IN src/map/modifier.h ASWELL!
 

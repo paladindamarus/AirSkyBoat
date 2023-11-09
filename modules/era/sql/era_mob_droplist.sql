@@ -6318,7 +6318,7 @@ INSERT INTO `mob_droplist` VALUES (763,2,0,1000,749,0);        -- Mythril Beastc
 INSERT INTO `mob_droplist` VALUES (763,4,0,1000,4552,0);       -- Serving Of Herb Crawler Eggs (Despoil)
 
 -- ZoneID:  52 - Emergent Elm
-INSERT INTO `mob_droplist` VALUES (764,0,0,1000,18386,@COMMON);   -- Gloom Claymore (Common, 15%)
+INSERT INTO `mob_droplist` VALUES (764,0,0,1000,18386,@VCOMMON);   -- Gloom Claymore (Very Common, 24%)
 INSERT INTO `mob_droplist` VALUES (764,0,0,1000,15701,@UNCOMMON); -- Arborist Nails (Uncommon, 10%)
 
 -- ZoneID:  75 - Wandering Wamoura
@@ -14974,8 +14974,8 @@ INSERT INTO `mob_droplist` VALUES (1854,0,0,1000,1783,@RARE);     -- Sample Of L
 INSERT INTO `mob_droplist` VALUES (1854,4,0,1000,1783,0);         -- Sample Of Luminian Tissue (Despoil)
 
 -- ZoneID:  33 - Omphuabo
-INSERT INTO `mob_droplist` VALUES (1855,0,0,1000,1784,@UNCOMMON); -- Phuabo Organ (Uncommon, 10%)
-INSERT INTO `mob_droplist` VALUES (1855,0,0,1000,1784,@UNCOMMON); -- Phuabo Organ (Uncommon, 10%)
+INSERT INTO `mob_droplist` VALUES (1855,0,0,1000,1784,@COMMON); -- Phuabo Organ (Common, 15%)
+INSERT INTO `mob_droplist` VALUES (1855,0,0,1000,1784,@COMMON); -- Phuabo Organ (Common, 15%)
 INSERT INTO `mob_droplist` VALUES (1855,0,0,1000,1783,@RARE);     -- Sample Of Luminian Tissue (Rare, 5%)
 INSERT INTO `mob_droplist` VALUES (1855,0,0,1000,1852,@RARE);     -- High-Quality Phuabo Organ (Rare, 5%)
 INSERT INTO `mob_droplist` VALUES (1855,4,0,1000,1783,0);         -- Sample Of Luminian Tissue (Despoil)

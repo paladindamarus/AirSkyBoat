@@ -16,6 +16,7 @@ require("scripts/globals/ability")
 require("scripts/globals/magic")
 require("scripts/globals/utils")
 require("scripts/globals/damage")
+require("scripts/globals/weaponskillids")
 -----------------------------------
 
 xi = xi or { }
@@ -136,7 +137,12 @@ local function fencerBonus(attacker)
     return bonus
 end
 
-local function shadowAbsorb(target)
+local function shadowAbsorb(target, wsIgnoreShadows)
+    -- allow bypassing all shadows for certain WSs like Catastrophe
+    if wsIgnoreShadows then
+        return false
+    end
+
     local targShadows = target:getMod(xi.mod.UTSUSEMI)
     local shadowType  = xi.mod.UTSUSEMI
 
@@ -267,6 +273,13 @@ xi.weaponskills.getRangedHitRate = function(attacker, target, capHitRate, bonus,
         bonus = 0
     end
 
+    if
+        calcParams ~= nil and
+        calcParams.bonusAcc ~= nil
+    then
+        bonus = bonus + calcParams.bonusAcc
+    end
+
     local acc100 = (wsParams and wsParams.acc100) or 0
     local acc200 = (wsParams and wsParams.acc200) or 0
     local acc300 = (wsParams and wsParams.acc300) or 0
@@ -321,7 +334,7 @@ local function getSingleHitDamage(attacker, target, dmg, wsParams, calcParams, f
         end
     end
 
-    calcParams.hitRate = utils.clamp(calcParams.hitRate + calcParams.bonusAcc, 0.2, 0.95)
+    calcParams.hitRate = utils.clamp(calcParams.hitRate, 0.2, 0.95)
 
     if firstHitAccBonus ~= nil and firstHitAccBonus then
         calcParams.hitRate = calcParams.hitRate + 0.5 -- First hit gets a +100 ACC bonus which translates to +50 hit
@@ -330,14 +343,20 @@ local function getSingleHitDamage(attacker, target, dmg, wsParams, calcParams, f
 
     local missChance = math.random()
 
-    missChance = xi.weaponskills.handleParry(attacker, target, missChance, calcParams.guaranteedHit)
+    -- ranged WS cannot be parried according to current understanding
+    if not isRanged then
+        missChance = xi.weaponskills.handleParry(attacker, target, missChance, calcParams.guaranteedHit)
+    end
+
+    -- Catastrophe ignores shadows (thus need special case here)
+    local wsIgnoreShadows = calcParams.wsID == xi.weaponskill.CATASTROPHE
 
     if
         (missChance <= calcParams.hitRate or
         calcParams.guaranteedHit) and
         not calcParams.mustMiss
     then
-        if not shadowAbsorb(target) then
+        if not shadowAbsorb(target, wsIgnoreShadows) then
             local critChance = math.random() -- See if we land a critical hit
             criticalHit = (wsParams.canCrit and critChance <= calcParams.critRate) or
                 calcParams.forcedFirstCrit or
@@ -579,8 +598,14 @@ xi.weaponskills.calculateRawWSDmg = function(attacker, target, wsID, tp, action,
     calcParams.hitsLanded = 0
     calcParams.shadowsAbsorbed = 0
 
-    -- Calculate the damage from the first hit
-    if isRanged then
+    -- Calculate the damage from the first hit (only certain ranged WS have this bonus)
+    if
+        isRanged and
+        wsID ~= xi.weaponskill.CORONACH and
+        wsID ~= xi.weaponskill.DETONATOR and
+        wsID ~= xi.weaponskill.NAMAS_ARROW and
+        wsID ~= xi.weaponskill.EMPYREAL_ARROW
+    then
         hitdmg, calcParams = getSingleHitDamage(attacker, target, dmg, wsParams, calcParams, false, isRanged, false)
     else
         hitdmg, calcParams = getSingleHitDamage(attacker, target, dmg, wsParams, calcParams, true, isRanged, false)
@@ -773,7 +798,7 @@ xi.weaponskills.doPhysicalWeaponskill = function(attacker, target, wsID, wsParam
     calcParams.bonusfTP = gorgetBeltFTP or 0
     calcParams.bonusAcc = (gorgetBeltAcc or 0) + attacker:getMod(xi.mod.WSACC)
     calcParams.bonusWSmods = wsParams.bonusWSmods or 0
-    calcParams.hitRate = xi.weaponskills.getHitRate(attacker, target, false, calcParams.bonusAcc, false, wsParams, calcParams)
+    calcParams.hitRate = xi.weaponskills.getHitRate(attacker, target, false, 0, false, wsParams, calcParams)
     calcParams.skillType = attack.weaponType
 
     if
@@ -1100,6 +1125,13 @@ xi.weaponskills.getHitRate = function(attacker, target, capHitRate, bonus, isSub
         bonus = 0
     end
 
+    if
+        calcParams ~= nil and
+        calcParams.bonusAcc ~= nil
+    then
+        bonus = bonus + calcParams.bonusAcc
+    end
+
     local hitrate = 0
     local flourisheffect = attacker:getStatusEffect(xi.effect.BUILDING_FLOURISH)
     local accVarryTP = 0
@@ -1147,22 +1179,9 @@ xi.weaponskills.fTP = function(tp, ftp1, ftp2, ftp3)
         print("fTP error: TP value is not between 1000-3000!")
     end
 
-    return 1 -- no ftp mod
+    -- no ftp mod
+    return 1
 end
-
--- local function fTPMob(tp, ftp1, ftp2, ftp3)
---     if (tp < 1000) then
---         tp = 1000
---     end
-
---     if (tp >= 1000 and tp < 1500) then
---         return ftp1 + ( ((ftp2 - ftp1 ) / 500) * (tp - 1000) )
---     elseif (tp >= 1500 and tp <= 3000) then
---         -- generate a straight line between ftp2 and ftp3 and find point @ tp
---         return ftp2 + ( ((ftp3 - ftp2) / 1500) * (tp - 1500) )
---     end
---     return 1 -- no ftp mod
--- end
 
 xi.weaponskills.calculatedIgnoredDef = function(tp, def, ignore1, ignore2, ignore3)
     if tp >= 1000 and tp < 2000 then

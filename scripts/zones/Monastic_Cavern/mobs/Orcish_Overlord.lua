@@ -31,23 +31,25 @@ entity.onMobDeath = function(mob, player, optParams)
 end
 
 entity.onMobDespawn = function(mob)
-    local nqId = mob:getID()
+    local nqID = mob:getID()
 
     -- the quest version of this NM doesn't respawn or count toward hq nm
-    if nqId == ID.mob.ORCISH_OVERLORD then
-        SetServerVariable("[POPNUM]Overlord_Bakgodek", math.random(1, 5))
-        local hqId        = mob:getID() + 1
+    if nqID == ID.mob.ORCISH_OVERLORD then
+        local hqID        = ID.mob.OVERLORD_BAKGODEK
         local timeOfDeath = GetServerVariable("[POP]Overlord_Bakgodek")
         local kills       = GetServerVariable("[PH]Overlord_Bakgodek")
-        local popNow      = GetServerVariable("[POPNUM]Overlord_Bakgodek") == 3 or kills > 6
+        SetServerVariable("[POPNUM]Overlord_Bakgodek", math.random(kills, 4))
+        local popNow      = GetServerVariable("[POPNUM]Overlord_Bakgodek") == 4
 
         if os.time() > timeOfDeath and popNow then
-            DisallowRespawn(nqId, true)
-            DisallowRespawn(hqId, false)
-            xi.mob.nmTODPersist(GetMobByID(hqId), math.random(75600, 86400))
-        else
-            xi.mob.nmTODPersist(GetMobByID(nqId), math.random(75600, 86400))
+            DisallowRespawn(nqID, true)
+            DisallowRespawn(hqID, false)
+            xi.mob.nmTODPersist(GetMobByID(hqID), math.random(75600, 86400))
+        elseif os.time() > timeOfDeath then -- Track NQ kills after 3 days
+            xi.mob.nmTODPersist(GetMobByID(nqID), math.random(75600, 86400))
             SetServerVariable("[PH]Overlord_Bakgodek", kills + 1)
+        else
+            xi.mob.nmTODPersist(GetMobByID(nqID), math.random(75600, 86400))
         end
     end
 end

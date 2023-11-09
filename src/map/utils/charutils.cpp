@@ -1820,8 +1820,8 @@ namespace charutils
                     if (((CItemWeapon*)PItem)->getSkillType() != SKILL_STRING_INSTRUMENT && ((CItemWeapon*)PItem)->getSkillType() != SKILL_WIND_INSTRUMENT)
                     {
                         PChar->health.tp = 0;
+                        PChar->StatusEffectContainer->DelStatusEffect(EFFECT_AFTERMATH);
                     }
-                    PChar->StatusEffectContainer->DelStatusEffect(EFFECT_AFTERMATH);
                     BuildingCharWeaponSkills(PChar);
                     UpdateWeaponStyle(PChar, equipSlotID, nullptr);
                 }
@@ -2719,6 +2719,7 @@ namespace charutils
             {
                 // If the weapon ISN'T a wind based instrument or a string based instrument
                 PChar->health.tp = 0;
+                PChar->StatusEffectContainer->DelStatusEffect(EFFECT_AFTERMATH);
             }
 
             if (!PChar->getEquip(SLOT_MAIN) || !PChar->getEquip(SLOT_MAIN)->isType(ITEM_EQUIPMENT) ||
@@ -2727,7 +2728,6 @@ namespace charutils
                 CheckUnarmedWeapon(PChar);
             }
 
-            PChar->StatusEffectContainer->DelStatusEffect(EFFECT_AFTERMATH);
             BuildingCharWeaponSkills(PChar);
             PChar->pushPacket(new CCharAbilitiesPacket(PChar));
         }
@@ -4973,6 +4973,10 @@ namespace charutils
             exploss = (uint16)(exploss * settings::get<float>("map.EXP_LOSS_RATE"));
         }
 
+        // Save exp lost.
+        PChar->setCharVar("expLost", exploss);
+
+        // Handle deleveling
         if (PChar->jobs.exp[PChar->GetMJob()] < exploss)
         {
             if (PChar->jobs.job[PChar->GetMJob()] > 1)

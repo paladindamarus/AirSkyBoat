@@ -411,7 +411,7 @@ INSERT INTO `item_latents` VALUES (13288,374,10,2,75);   -- "Cure" potency +10% 
 -- -------------------------------------------------------
 -- Sorcerer's Ring
 -- -------------------------------------------------------
-INSERT INTO `item_latents` VALUES (13289,28,10,44,76);    -- "Magic Atk. Bonus"+10 while HP <76% and TP <100%
+INSERT INTO `item_latents` VALUES (13289,28,10,44,75);    -- "Magic Atk. Bonus"+10 while HP <76% and TP <100%
 
 -- -------------------------------------------------------
 -- Fencer's Ring
@@ -2219,6 +2219,15 @@ INSERT INTO `item_latents` VALUES (17212,26,20,37,3);
 INSERT INTO `item_latents` VALUES (17212,26,20,37,5);
 INSERT INTO `item_latents` VALUES (17212,26,25,37,4);
 
+-- -------------------------------------------------------
+-- Shigeto Bow
+-- -------------------------------------------------------
+INSERT INTO `item_latents` VALUES (18142,26,7,62,12);     -- RACC +7 for Samurai main job
+
+-- -------------------------------------------------------
+-- Shigeto Bow +1
+-- -------------------------------------------------------
+INSERT INTO `item_latents` VALUES (18143,26,8,62,12);     -- RACC +8 for Samurai main job
 -- -------------------------------------------------------
 -- Musketeer Gun +1/+2
 -- -------------------------------------------------------
