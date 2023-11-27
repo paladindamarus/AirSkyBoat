@@ -788,6 +788,16 @@ xi.magic.applyAbilityResistance = function(player, target, params)
         end
     end
 
+    local subEffect = 0
+    if params.subEffect then
+        subEffect = params.subEffect
+    end
+
+    local subPower = 0
+    if params.subPower then
+        subPower = params.subPower
+    end
+
     if not params.element then
         params.element = xi.magic.ele.NONE
     end
@@ -827,13 +837,13 @@ xi.magic.applyAbilityResistance = function(player, target, params)
         params.chance * resist > math.random() * 150 and
         resist >= 0.5
     then
-        target:addStatusEffect(params.effect, params.power, params.tick, params.duration * resist)
+        target:addStatusEffect(params.effect, params.power, params.tick, params.duration * resist, subEffect, subPower)
     elseif
         params.effect and
         resist >= 0.5 and
         not params.chance
     then
-        target:addStatusEffect(params.effect, params.power, params.tick, params.duration * resist)
+        target:addStatusEffect(params.effect, params.power, params.tick, params.duration * resist, subEffect, subPower)
     end
 
     return resist
@@ -1867,7 +1877,7 @@ xi.magic.incrementBuildDuration = function(target, effect, caster)
 
         local buildResMod = target:getMod(resType)
 
-        if buildResMod ~= nil then
+        if buildResMod > 0 then
             local durationDecrease = target:getLocalVar(string.format("[RESBUILD]Base_%s", resType))
             local spellCount = target:getLocalVar(string.format("[RESBUILD]Base_%s_Count", resType))
 
@@ -1890,7 +1900,7 @@ xi.magic.calculateBuildDuration = function(target, duration, effect, caster)
 
         local buildResMod = target:getMod(resType)
 
-        if buildResMod ~= nil then
+        if buildResMod > 0 then
             local durationDecrease = target:getLocalVar(string.format("[RESBUILD]Base_%s", resType))
             duration = utils.clamp(duration - durationDecrease, 0, 65535) -- Used to add more fidelity to the build. Adding a mod of 30 will be -3 seconds per cast.
         end

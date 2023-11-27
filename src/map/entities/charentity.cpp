@@ -1404,6 +1404,11 @@ void CCharEntity::OnAbility(CAbilityState& state, action_t& action)
             action.recast = PAbility->getRecastTime() - meritRecastReduction;
         }
 
+        if (PAbility->getID() == ABILITY_THIRD_EYE && this->StatusEffectContainer->HasStatusEffect(EFFECT_SEIGAN))
+        {
+            action.recast /= 2;
+        }
+
         if (PAbility->getID() == ABILITY_LIGHT_ARTS || PAbility->getID() == ABILITY_DARK_ARTS || PAbility->getRecastId() == 231) // stratagems
         {
             if (this->StatusEffectContainer->HasStatusEffect(EFFECT_TABULA_RASA))
@@ -1653,14 +1658,7 @@ void CCharEntity::OnAbility(CAbilityState& state, action_t& action)
         }
         else
         {
-            if (this->StatusEffectContainer->HasStatusEffect(EFFECT_SEIGAN) && PAbility->getID() == 62)
-            {
-                PRecastContainer->Add(RECAST_ABILITY, PAbility->getRecastId(), action.recast / 2);
-            }
-            else
-            {
-                PRecastContainer->Add(RECAST_ABILITY, PAbility->getRecastId(), action.recast);
-            }
+            PRecastContainer->Add(RECAST_ABILITY, PAbility->getRecastId(), action.recast);
         }
 
         uint16 recastID = PAbility->getRecastId();
@@ -1824,15 +1822,6 @@ void CCharEntity::OnRangedAttack(CRangeState& state, action_t& action)
 
                 if (slot == SLOT_RANGED)
                 {
-                    if (state.IsRapidShot())
-                    {
-                        damage = attackutils::CheckForDamageMultiplier(this, PItem, damage, PHYSICAL_ATTACK_TYPE::RAPID_SHOT, SLOT_RANGED);
-                    }
-                    else
-                    {
-                        damage = attackutils::CheckForDamageMultiplier(this, PItem, damage, PHYSICAL_ATTACK_TYPE::RANGED, SLOT_RANGED);
-                    }
-
                     if (PItem != nullptr)
                     {
                         charutils::TrySkillUP(this, (SKILLTYPE)PItem->getSkillType(), PTarget->GetMLevel());
@@ -1890,6 +1879,18 @@ void CCharEntity::OnRangedAttack(CRangeState& state, action_t& action)
             actionTarget.messageID  = 352;
             actionTarget.reaction   = REACTION::HIT;
             actionTarget.speceffect = SPECEFFECT::CRITICAL_HIT;
+        }
+
+        if (slot == SLOT_RANGED)
+        {
+            if (state.IsRapidShot())
+            {
+                totalDamage = attackutils::CheckForDamageMultiplier(this, PItem, totalDamage, PHYSICAL_ATTACK_TYPE::RAPID_SHOT, SLOT_RANGED, true);
+            }
+            else
+            {
+                totalDamage = attackutils::CheckForDamageMultiplier(this, PItem, totalDamage, PHYSICAL_ATTACK_TYPE::RANGED, SLOT_RANGED, true);
+            }
         }
 
         actionTarget.param =

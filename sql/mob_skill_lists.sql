@@ -96,7 +96,7 @@ INSERT INTO `mob_skill_lists` VALUES ('Avatar-Carbuncle',34,908);
 INSERT INTO `mob_skill_lists` VALUES ('Avatar-Carbuncle',34,909);
 INSERT INTO `mob_skill_lists` VALUES ('Avatar-Carbuncle',34,910);
 INSERT INTO `mob_skill_lists` VALUES ('Avatar-Carbuncle',34,911);
-INSERT INTO `mob_skill_lists` VALUES ('CoP-Diabolos',35,1903);
+INSERT INTO `mob_skill_lists` VALUES ('CoP-Diabolos',35,1554);
 INSERT INTO `mob_skill_lists` VALUES ('CoP-Diabolos',35,1905);
 INSERT INTO `mob_skill_lists` VALUES ('CoP-Diabolos',35,1906);
 INSERT INTO `mob_skill_lists` VALUES ('CoP-Diabolos',35,1908);
@@ -1738,7 +1738,7 @@ INSERT INTO `mob_skill_lists` VALUES ('Raptor',377,374);
 INSERT INTO `mob_skill_lists` VALUES ('Raptor',377,377);
 INSERT INTO `mob_skill_lists` VALUES ('Raptor',377,379);
 INSERT INTO `mob_skill_lists` VALUES ('Raptor',377,380);
-INSERT INTO `mob_skill_lists` VALUES ('Avatar-Diabolos',378,1903);
+INSERT INTO `mob_skill_lists` VALUES ('Avatar-Diabolos',378,1554);
 INSERT INTO `mob_skill_lists` VALUES ('Avatar-Diabolos',378,1904);
 INSERT INTO `mob_skill_lists` VALUES ('Avatar-Diabolos',378,1905);
 INSERT INTO `mob_skill_lists` VALUES ('Avatar-Diabolos',378,1906);
@@ -1754,7 +1754,7 @@ INSERT INTO `mob_skill_lists` VALUES ('Pet-Carbuncle',379,909);
 INSERT INTO `mob_skill_lists` VALUES ('Pet-Carbuncle',379,910);
 INSERT INTO `mob_skill_lists` VALUES ('Pet-Carbuncle',379,911);
 INSERT INTO `mob_skill_lists` VALUES ('Pet-Carbuncle',379,912);
-INSERT INTO `mob_skill_lists` VALUES ('Pet-Diabolos',380,1903);
+INSERT INTO `mob_skill_lists` VALUES ('Pet-Diabolos',380,1554);
 INSERT INTO `mob_skill_lists` VALUES ('Pet-Diabolos',380,1904);
 INSERT INTO `mob_skill_lists` VALUES ('Pet-Diabolos',380,1905);
 INSERT INTO `mob_skill_lists` VALUES ('Pet-Diabolos',380,1906);
@@ -4140,7 +4140,28 @@ INSERT INTO `mob_skill_lists` VALUES ('Nightmare_Worm',4081,1888); -- Tremors (L
 INSERT INTO `mob_skill_lists` VALUES ('Nightmare_Worm',4081,1889); -- Spirit Vacuum
 INSERT INTO `mob_skill_lists` VALUES ('Nightmare_Worm',4081,1890); -- Sound Vacuum
 
+INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Diamond',4082,1909); -- Cacodemonia
+INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Diamond',4082,1912); -- Hypnogenesis
+INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Diamond',4082,1908); -- Nightmare
+
 INSERT INTO `mob_skill_lists` VALUES ('Dark_Rider',4083,2126); -- Zantetsuken
+
+INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Club',4084,1909); -- Cacodemonia
+INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Club',4084,1554); -- Camisado: Using old non-AoE Camisado
+INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Club',4084,1908); -- Nightmare
+INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Club',4084,1905); -- Noctoshield
+
+INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Spade',4085,1554); -- Camisado: Using old non-AoE Camisado
+INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Spade',4085,1910); -- Nether Blast
+INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Spade',4085,1918); -- Nether Tempest
+INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Spade',4085,1905); -- Noctoshield
+INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Spade',4085,1917); -- Sweeping Somnolence
+
+INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Heart',4086,1905); -- Noctoshield
+INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Heart',4086,1906); -- Ultimate Terror
+INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Heart',4086,1907); -- Dream Shroud
+
+INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Shard',4087,1903); -- Camisado AoE
 
 -- End of AirSkyBoat section
 

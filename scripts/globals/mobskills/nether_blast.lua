@@ -1,4 +1,5 @@
 -----------------------------------
+-- Nether Blast
 -- Ranged Attack
 -- Deals a ranged attack to a single target.
 -----------------------------------
@@ -8,7 +9,10 @@ local mobskillObject = {}
 
 mobskillObject.onMobSkillCheck = function(target, mob, skill)
     -- Ranged attack only used when target is out of range
-    if (mob:checkDistance(target) > 2) then
+    if
+        mob:checkDistance(target) > 2 or
+        skill:getID() == 1910 -- Diabolos Dynamis Tavnazia doesnt care about range
+    then
         return 0
     else
         return 1
@@ -16,7 +20,13 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local dmg = mob:getMainLvl() * 5 + 10 -- http://wiki.ffo.jp/html/4045.html
+    local multiplier = 5
+    -- Diabolos Dynamis Tavnazia tosses nether blast for ~1k
+    if skill:getID() == 1910 then
+        multiplier = 10
+    end
+
+    local dmg = mob:getMainLvl() * multiplier + 10 -- http://wiki.ffo.jp/html/4045.html
     local dmgmod = 1
     local ignoreres = true
 

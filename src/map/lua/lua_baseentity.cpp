@@ -4452,8 +4452,7 @@ void CLuaBaseEntity::equipItem(uint16 itemID, sol::object const& container)
         PItem = static_cast<CItemEquipment*>(PChar->getStorage(containerID)->GetItem(SLOT));
 
         charutils::EquipItem(PChar, SLOT, PItem->getSlotType(), containerID);
-        charutils::SaveCharEquip(PChar);
-        charutils::SaveCharLook(PChar);
+        PChar->RequestPersist(CHAR_PERSIST::EQUIP);
     }
 }
 
@@ -15250,7 +15249,7 @@ bool CLuaBaseEntity::actionQueueEmpty()
  *  Notes   : Currently only used by a few select mobs
  ************************************************************************/
 
-void CLuaBaseEntity::castSpell(sol::object const& spell, sol::object entity)
+void CLuaBaseEntity::castSpell(sol::object const& spell, sol::object const& entity)
 {
     if (spell != sol::lua_nil)
     {

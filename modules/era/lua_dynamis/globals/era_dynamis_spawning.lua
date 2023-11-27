@@ -817,9 +817,11 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
 
     -- special spawning of DL clones near victems
     if
-        mobIndex == 179 and
+        ((zoneID == xi.zone.DYNAMIS_TAVNAZIA and
+        mobIndex == 252) or
+        (mobIndex == 179 and
         oMobIndex == 179 and
-        zoneID == xi.zone.DYNAMIS_XARCABARD and
+        zoneID == xi.zone.DYNAMIS_XARCABARD)) and
         target
     then
         xPos = target:getXPos() + math.random() * 6 - 3
@@ -861,7 +863,7 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
         ["Moltenox Stubthumbs"] = { "M.Stubthunmbs", 136, 134, 176, 0, 5013, "Beastmen" }, -- Molt (WAR)
         ["Morblox Chubbychin"] = { "M.Chubbychin", 153, 134, 176, 0, 5013, "Beastmen" }, -- Morb (SMN)
         ["Routsix Rubbertendon"] = { "R.Rubbertendon", 151, 134, 176, 0, 5013, "Beastmen" }, -- Rout (BST)
-        ["Ruffbix Jumbolobes"] = { "R.Jumolobes", 148, 134, 176, 4, 5013, "Beastmen" }, -- Ruff (PLD)
+        ["Ruffbix Jumbolobes"] = { "R.Jumbolobes", 148, 134, 176, 4, 5013, "Beastmen" }, -- Ruff (PLD)
         ["Shisox Widebrow"] = { "S.Widebrow", 156, 134, 176, 0, 5013, "Beastmen" }, -- Shis (SAM)
         ["Slinkix Trufflesniff"] = { "S.Trufflesniff", 155, 134, 176, 0, 5013, "Beastmen" }, -- Slin (RNG)
         ["Swypestix Tigershins"] = { "S.Tigershins", 145, 134, 176, 7, 5013, "Beastmen" }, -- Swyp (NIN)
@@ -1105,11 +1107,11 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
         ["Nightmare Antlion"] = { "N. Antlion" , 64, 42, 0, 0, 4074, "Nightmare Antlion" }, -- NAnt
         ["Nightmare Worm"] = { "N. Worm" , 7, 42, 1807, 5075, 4081, "Nightmare Worm" }, -- NWor
         ["Umbral Diabolos"] = { "U. Diabolos", 4, 42, 0, nil, nil, "Umbral Diabolos" }, -- Umb
-        ["Diabolos Club"] = { "D. Club", 4, 42, 0, nil, nil, "Diabolos Club" }, -- DiaC
-        ["Diabolos Diamond"] = { "D. Diamond", 3, 42, 0, nil, nil, "Diabolos Diamond" }, -- DiaD
-        ["Diabolos Heart"] = { "D. Heart", 2, 42, 0, nil, nil, "Diabolos Heart" }, -- DiaH
-        ["Diabolos Spade"] = { "D. Spade", 1, 42, 0, nil, nil, "Diabolos Spade" }, -- DiaS
-        ["Diabolos Shard"] = { "D. Shard", 5, 42, 0, nil, nil, "Enabled Auto Attack" }, -- DiaSh
+        ["Diabolos Club"] = { "D. Club", 4, 42, 0, 108, 4084, "Diabolos Club" }, -- DiaC
+        ["Diabolos Diamond"] = { "D. Diamond", 3, 42, 0, 107, 4082, "Diabolos Diamond" }, -- DiaD
+        ["Diabolos Heart"] = { "D. Heart", 2, 42, 0, 106, 4086, "Diabolos Heart" }, -- DiaH
+        ["Diabolos Spade"] = { "D. Spade", 1, 42, 0, nil, 4085, "Diabolos Spade" }, -- DiaS
+        ["Diabolos Shard"] = { "D. Shard", 5, 42, 0, nil, 4087, "Diabolos Shard" }, -- DiaSh
     }
     xi.dynamis.nmFunctions =
     {
@@ -1968,7 +1970,7 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
             ["onMobWeaponSkillPrepare"] = { function(mob)
             end },
 
-            ["onMobWeaponSkill"] = { function(mob)
+            ["onMobWeaponSkill"] = { function(mobTarget, mob, skill)
             end },
 
             ["onMobDeath"] = { function(mob, player, optParams)
@@ -1984,13 +1986,15 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
             end },
 
             ["onMobEngaged"] = { function(mob, mobTarget)
-                xi.dynamis.onMobEngagedDiabolosClub(mob, mobTarget)
+                xi.dynamis.onMobEngagedDiabolos(mob, mobTarget)
             end },
 
             ["onMobFight"] = { function(mob, mobTarget)
+                xi.dynamis.onMobFightDiabolosClub(mob, mobTarget)
             end },
 
             ["onMobRoam"] = { function(mob)
+                xi.dynamis.onMobRoamDiabolos(mob)
             end },
 
             ["onMobMagicPrepare"] = { function(mob, mobTarget, spellId)
@@ -1999,11 +2003,11 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
             ["onMobWeaponSkillPrepare"] = { function(mob)
             end },
 
-            ["onMobWeaponSkill"] = { function(mob)
+            ["onMobWeaponSkill"] = { function(mobTarget, mob, skill)
             end },
 
             ["onMobDeath"] = { function(mob, player, optParams)
-                xi.dynamis.mobOnDeathDiabolosClub(mob, player, optParams)
+                xi.dynamis.mobOnDeathDiabolos(mob, player, optParams)
             end },
 
             ["mixins"] = {   },
@@ -2015,58 +2019,67 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
             end },
 
             ["onMobEngaged"] = { function(mob, mobTarget)
+                xi.dynamis.onMobEngagedDiabolos(mob, mobTarget)
             end },
 
             ["onMobFight"] = { function(mob, mobTarget)
+                xi.dynamis.onMobFightDiabolosHeart(mob, mobTarget)
             end },
 
             ["onMobRoam"] = { function(mob)
+                xi.dynamis.onMobRoamDiabolos(mob)
             end },
 
             ["onMobMagicPrepare"] = { function(mob, mobTarget, spellId)
+                xi.dynamis.onMobMagicPrepareDiabolosHeart(mob, mobTarget, spellId)
             end },
 
             ["onMobWeaponSkillPrepare"] = { function(mob)
             end },
 
-            ["onMobWeaponSkill"] = { function(mob)
+            ["onMobWeaponSkill"] = { function(mobTarget, mob, skill)
             end },
 
             ["onMobDeath"] = { function(mob, player, optParams)
-                xi.dynamis.mobOnDeathDiabolosHeart(mob, player, optParams)
+                xi.dynamis.mobOnDeathDiabolos(mob, player, optParams)
             end },
 
             ["mixins"] = {   },
         },
         ["Diabolos Spade"] =
         {
-            ["onMobSpawn"] = { function(mob) xi.dynamis.onSpawnDiabolosSpade(mob)
+            ["onMobSpawn"] = { function(mob)
+                xi.dynamis.onSpawnDiabolosSpade(mob)
             end },
 
             ["onMobEngaged"] = { function(mob, mobTarget)
+                xi.dynamis.onMobEngagedDiabolos(mob, mobTarget)
             end },
 
             ["onMobFight"] = { function(mob, mobTarget)
+                xi.dynamis.onMobFightDiabolosSpade(mob, mobTarget)
             end },
 
             ["onMobRoam"] = { function(mob)
+                xi.dynamis.onMobRoamDiabolos(mob)
             end },
 
             ["onMobMagicPrepare"] = { function(mob, mobTarget, spellId)
             end },
 
-            ["onMobWeaponSkillPrepare"] = { function(mob)
+            ["onMobWeaponSkillPrepare"] = { function(mob, mobTarget)
+                xi.dynamis.onMobWeaponSkillPrepareDiabolosSpade(mob, mobTarget)
             end },
 
-            ["onMobWeaponSkill"] = { function(mob)
+            ["onMobWeaponSkill"] = { function(mobTarget, mob, skill)
             end },
 
-            ["onMobDeath"] = { function(mob, player, optParams) xi.dynamis.mobOnDeathDiabolosSpade(mob, player, optParams)
+            ["onMobDeath"] = { function(mob, player, optParams)
+                xi.dynamis.mobOnDeathDiabolos(mob, player, optParams)
             end },
 
             ["mixins"] = {   },
         },
-
         ["Diabolos Diamond"] =
         {
             ["onMobSpawn"] = { function(mob)
@@ -2074,9 +2087,44 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
             end },
 
             ["onMobEngaged"] = { function(mob, mobTarget)
+                xi.dynamis.onMobEngagedDiabolos(mob, mobTarget)
             end },
 
             ["onMobFight"] = { function(mob, mobTarget)
+                xi.dynamis.onMobFightDiabolosDiamond(mob, mobTarget)
+            end },
+
+            ["onMobRoam"] = { function(mob)
+                xi.dynamis.onMobRoamDiabolos(mob)
+            end },
+
+            ["onMobMagicPrepare"] = { function(mob, mobTarget, spellId)
+            end },
+
+            ["onMobWeaponSkillPrepare"] = { function(mob)
+            end },
+
+            ["onMobWeaponSkill"] = { function(mobTarget, mob, skill)
+                xi.dynamis.onMobWeaponSkillDiabolosDiamond(mobTarget, mob, skill)
+            end },
+
+            ["onMobDeath"] = { function(mob, player, optParams)
+                xi.dynamis.mobOnDeathDiabolos(mob, player, optParams)
+            end },
+
+            ["mixins"] = {   },
+        },
+        ["Diabolos Shard"] =
+        {
+            ["onMobSpawn"] = { function(mob)
+                xi.dynamis.onSpawnDiabolosShard(mob)
+            end },
+
+            ["onMobEngaged"] = { function(mob, mobTarget)
+            end },
+
+            ["onMobFight"] = { function(mob, mobTarget)
+                xi.dynamis.onMobFightDiabolosShard(mob, mobTarget)
             end },
 
             ["onMobRoam"] = { function(mob)
@@ -2088,11 +2136,12 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
             ["onMobWeaponSkillPrepare"] = { function(mob)
             end },
 
-            ["onMobWeaponSkill"] = { function(mob)
+            ["onMobWeaponSkill"] = { function(mobTarget, mob, skill)
+                xi.dynamis.onMobWeaponSkillDiabolosShard(mobTarget, mob, skill)
             end },
 
             ["onMobDeath"] = { function(mob, player, optParams)
-                xi.dynamis.mobOnDeathDiabolosDiamond(mob, player, optParams)
+                xi.dynamis.mobOnDeath(mob, player, optParams)
             end },
 
             ["mixins"] = {   },
@@ -3027,6 +3076,7 @@ m:addOverride("xi.dynamis.megaBossOnDeath", function(mob, player)
     local zoneID = mob:getZoneID()
     local mobIndex = mob:getZone():getLocalVar(string.format("MobIndex_%s", mob:getID()))
     local mobVar = xi.dynamis.mobList[mob:getZoneID()][mobIndex].info[5]
+
     if mob:getLocalVar("GaveTimeExtension") ~= 1 then -- Ensure we don't give more than 1 time extension.
         xi.dynamis.mobOnDeath(mob, player, mobVar) -- Process time extension and wave spawning
         local winQM = GetNPCByID(xi.dynamis.dynaInfoEra[zoneID].winQM) -- Set winQM

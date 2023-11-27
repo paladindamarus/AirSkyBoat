@@ -310,26 +310,26 @@ void SmallPacket0x00A(map_session_data_t* const PSession, CCharEntity* const PCh
         char session_key[20 * 2 + 1];
         bin2hex(session_key, (uint8*)PSession->blowfish.key, 20);
 
-        uint16 destination = MAX_ZONEID + 1; // Forces the function to fail closed
-
-        if (PChar != nullptr)
+        if (!PChar)
         {
-            destination = PChar->loc.destination; // Only sets destination if PChar isn't nullptr
-        }
-
-        if (destination >= MAX_ZONEID) // Fails to putting player back to it's previous zone
-        {
-            ShowWarning("packet_system::SmallPacket0x00A GetZone Bad Args for IncreaseZoneCounter, MITIGATING: Sending %s to loc.prevzone.", PChar->GetName());
-            destination = PChar->loc.prevzone;
-        }
-
-        auto zone = zoneutils::GetZone(destination);
-        if (zone == nullptr)
-        {
+            ShowWarning("packet_system::SmallPacket0x00A tried to zone a player that doesn't exist!");
             return;
         }
 
-        zone->IncreaseZoneCounter(PChar);
+        uint16 destination = PChar->loc.destination;
+
+        if (destination >= MAX_ZONEID)
+        {
+            // TODO: work out how to drop player in moghouse that exits them to the zone they were in before this happened, like we used to.
+            ShowWarning("packet_system::SmallPacket0x00A player tried to enter zone out of range: %d", destination);
+            ShowWarning("packet_system::SmallPacket0x00A dumping player `%s` to homepoint!", PChar->GetName());
+            charutils::HomePoint(PChar);
+        }
+
+        if (auto zone = zoneutils::GetZone(destination))
+        {
+            zone->IncreaseZoneCounter(PChar);
+        }
 
         PChar->m_ZonesList[PChar->getZone() >> 3] |= (1 << (PChar->getZone() % 8));
 
@@ -380,20 +380,15 @@ void SmallPacket0x00A(map_session_data_t* const PSession, CCharEntity* const PCh
         {
             PChar->m_charHistory.mhEntrances++;
             gardenutils::UpdateGardening(PChar, false);
-        }
-    }
 
-    // Only release client from "Downloading Data" if the packet sequence came in without a drop on 0x00D
-    // It is also possible that the client also never received our packets to release themselves from the loading screen.
-    // TODO: Need further research into the relationship between 0x00D and 0x00A, if any.
-    if (PChar->loc.zone != nullptr)
-    {
-        // Push Downloading Data before inventory count packets...
-        // This is how it happens on retail.
-        PChar->pushPacket(new CDownloadingDataPacket());
+            // Only release client from "Downloading Data" if the packet sequence came in without a drop on 0x00D
+            // It is also possible that the client also never received our packets to release themselves from the loading screen.
+            // TODO: Need further research into the relationship between 0x00D and 0x00A, if any.
 
-        if (PChar->m_moghouseID != 0)
-        {
+            // Push Downloading Data before inventory count packets...
+            // This is how it happens on retail.
+            PChar->pushPacket(new CDownloadingDataPacket());
+
             // Update any mannequins that might be placed on zonein
             // Build Mannequin model id list
             auto getModelIdFromStorageSlot = [](CCharEntity* PChar, uint8 slot) -> uint16
@@ -3682,8 +3677,7 @@ void SmallPacket0x050(map_session_data_t* const PSession, CCharEntity* const PCh
     }
 
     charutils::EquipItem(PChar, slotID, equipSlotID, containerID); // current
-    charutils::SaveCharEquip(PChar);
-    charutils::SaveCharLook(PChar);
+    PChar->RequestPersist(CHAR_PERSIST::EQUIP);
     luautils::CheckForGearSet(PChar); // check for gear set on gear change
     PChar->UpdateHealth();
     PChar->retriggerLatentsAfterPacketParsing = true; // retrigger all latents after all equip packets are parsed
@@ -3715,8 +3709,7 @@ void SmallPacket0x051(map_session_data_t* const PSession, CCharEntity* const PCh
             charutils::EquipItem(PChar, slotID, equipSlotID, containerID);
         }
     }
-    charutils::SaveCharEquip(PChar);
-    charutils::SaveCharLook(PChar);
+    PChar->RequestPersist(CHAR_PERSIST::EQUIP);
     luautils::CheckForGearSet(PChar); // check for gear set on gear change
     PChar->UpdateHealth();
 }
@@ -3755,7 +3748,7 @@ void SmallPacket0x053(map_session_data_t* const PSession, CCharEntity* const PCh
     if (type == 0 && PChar->getStyleLocked()) // /lockstyle off (Turns off Lockstyle)
     {
         charutils::SetStyleLock(PChar, false);
-        charutils::SaveCharLook(PChar);
+        PChar->RequestPersist(CHAR_PERSIST::EQUIP);
     }
     else if (type == 1) // Login (Also appears on Zone)
     {
@@ -3837,13 +3830,13 @@ void SmallPacket0x053(map_session_data_t* const PSession, CCharEntity* const PCh
             }
         }
         charutils::UpdateRemovedSlots(PChar);
-        charutils::SaveCharLook(PChar);
+        PChar->RequestPersist(CHAR_PERSIST::EQUIP);
     }
     else if (type == 4) // /lockstyle on (Turns on Lockstyle)
     {
         charutils::SetStyleLock(PChar, true);
         charutils::UpdateRemovedSlots(PChar);
-        charutils::SaveCharLook(PChar);
+        PChar->RequestPersist(CHAR_PERSIST::EQUIP);
     }
 
     if (type != 1 && type != 2)
@@ -7650,8 +7643,7 @@ void SmallPacket0x100(map_session_data_t* const PSession, CCharEntity* const PCh
         charutils::BuildingCharAbilityTable(PChar);
         charutils::BuildingCharWeaponSkills(PChar);
         charutils::LoadJobChangeGear(PChar);
-        charutils::SaveCharEquip(PChar);
-        charutils::SaveCharLook(PChar);
+        PChar->RequestPersist(CHAR_PERSIST::EQUIP);
 
         PChar->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_DISPELABLE | EFFECTFLAG_ROLL | EFFECTFLAG_ON_JOBCHANGE);
 
