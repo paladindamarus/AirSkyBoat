@@ -421,6 +421,15 @@ xi.dynamis.normalDynamicSpawn = function(oMob, oMobIndex, target)
                 groupZoneId = nameObj[job][3],
                 onMobSpawn = function(mobArg)
                     xi.dynamis.setMobStats(mobArg)
+
+                    -- Hydra mobs in Dynamis Beaucedine are immune to sleep
+                    if
+                        mobArg:getFamily() == 359 and
+                        mobArg:getZoneID() == xi.zone.DYNAMIS_BEAUCEDINE
+                    then
+                        mobArg:addImmunity(xi.immunity.SLEEP)
+                    end
+
                     -- set all dyna mobs to same sublink so for example statues link when seeing normal mobs
                     mobArg:setMobMod(xi.mobMod.SUBLINK, xi.dynamis.SUBLINK_ID)
                 end,
@@ -433,7 +442,7 @@ xi.dynamis.normalDynamicSpawn = function(oMob, oMobIndex, target)
                 end,
 
                 onMobDeath = function(mobArg, player, optParams)
-                    xi.dynamis.mobOnDeath(mobArg)
+                    xi.dynamis.mobOnDeath(mobArg, player, optParams)
                 end,
 
                 onMobDespawn = function(mob)
@@ -746,7 +755,7 @@ xi.dynamis.nonStandardDynamicSpawn = function(mobIndex, oMob, forceLink, zoneID,
         onMobFight = mobFunctions[mobMobType]["onMobFight"][1],
         onMobRoam =  mobFunctions[mobMobType]["onMobRoam"][1],
         onMobDeath = function(mob, player, optParams)
-            xi.dynamis.mobOnDeath(mob)
+            xi.dynamis.mobOnDeath(mob, player, optParams)
         end,
 
         onMobDespawn = function(mob)
@@ -795,11 +804,6 @@ xi.dynamis.nonStandardDynamicSpawn = function(mobIndex, oMob, forceLink, zoneID,
             mob:updateEnmity(target)
         end
     end
-
-    if mob:getFamily() == 68 then
-        -- temp fix to ensure clusters have the right animation sub
-        mob:setAnimationSub(4)
-    end
 end
 
 xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, target, oMob, mainDynaLord)
@@ -815,10 +819,13 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
 
     local mobName = xi.dynamis.mobList[zoneID][mobIndex].info[2]
 
-    -- special spawning of DL clones near victems
     if
+        -- Special spawning of Diabolos Shard, Nightmare Worm, and Nightmare Antlion
         ((zoneID == xi.zone.DYNAMIS_TAVNAZIA and
-        mobIndex == 252) or
+        (mobIndex == 252 or
+        mobIndex == 2 or
+        mobIndex == 3)) or
+        -- Special spawning of DL clones near victems
         (mobIndex == 179 and
         oMobIndex == 179 and
         zoneID == xi.zone.DYNAMIS_XARCABARD)) and
@@ -1205,8 +1212,8 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
             ["onMobWeaponSkill"] = { function(mob)
             end },
 
-            ["onMobDeath"] = { function(mob, player, optParams)
-                xi.dynamis.megaBossOnDeath(mob, player)
+            ["onMobDeath"] = { function(mobArg, player, optParams)
+                xi.dynamis.megaBossOnDeath(mobArg, player, optParams)
             end },
 
             ["mixins"] = {   },
@@ -1240,7 +1247,7 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
             end },
 
             ["onMobDeath"] = { function(mob, player, optParams)
-                xi.dynamis.megaBossOnDeath(mob, player)
+                xi.dynamis.megaBossOnDeath(mob, player, optParams)
             end },
 
             ["mixins"] = {   },
@@ -1468,8 +1475,8 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
             ["onMobWeaponSkill"] = { function(mob)
             end },
 
-            ["onMobDeath"] = { function(mob, player, optParams)
-                xi.dynamis.megaBossOnDeath(mob, player)
+            ["onMobDeath"] = { function(mobArg, player, optParams)
+                xi.dynamis.megaBossOnDeath(mobArg, player, optParams)
             end },
 
             ["mixins"] = {   },
@@ -1501,8 +1508,8 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
             ["onMobWeaponSkill"] = { function(mob)
             end },
 
-            ["onMobDeath"] = { function(mob, player, optParams)
-                xi.dynamis.megaBossOnDeath(mob, player)
+            ["onMobDeath"] = { function(mobArg, player, optParams)
+                xi.dynamis.megaBossOnDeath(mobArg, player, optParams)
             end },
 
             ["mixins"] = {   },
@@ -1913,7 +1920,8 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
             ["onMobWeaponSkill"] = { function(mob)
             end },
 
-            ["onMobDeath"] = { function(mob) xi.dynamis.wormDeath(mob)
+            ["onMobDeath"] = { function(mobArg, player, optParams)
+                xi.dynamis.wormDeath(mobArg, player, optParams)
             end },
 
             ["mixins"] = {   },
@@ -1942,8 +1950,8 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
             ["onMobWeaponSkill"] = { function(mob)
             end },
 
-            ["onMobDeath"] = { function(mob)
-                xi.dynamis.antlionDeath(mob)
+            ["onMobDeath"] = { function(mobArg, player, optParams)
+                xi.dynamis.antlionDeath(mobArg, player, optParams)
             end },
 
             ["mixins"] = { require("scripts/mixins/families/antlion_ambush") },
@@ -1973,8 +1981,8 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
             ["onMobWeaponSkill"] = { function(mobTarget, mob, skill)
             end },
 
-            ["onMobDeath"] = { function(mob, player, optParams)
-                xi.dynamis.mobOnDeath(mob, player, optParams)
+            ["onMobDeath"] = { function(mobArg, player, optParams)
+                xi.dynamis.mobOnDeath(mobArg, player, optParams)
             end },
 
             ["mixins"] = {   },
@@ -2137,7 +2145,6 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
             end },
 
             ["onMobWeaponSkill"] = { function(mobTarget, mob, skill)
-                xi.dynamis.onMobWeaponSkillDiabolosShard(mobTarget, mob, skill)
             end },
 
             ["onMobDeath"] = { function(mob, player, optParams)
@@ -2726,7 +2733,7 @@ xi.dynamis.setMobStats = function(mob)
 
         mob:setTrueDetection(true)
 
-        if     mob:getFamily() == 359 then -- If Hydra
+        if mob:getFamily() == 359 then -- If Hydra
             mob:setMobLevel(math.random(80, 82))
         elseif mob:getFamily() == 358 then -- If Kindred
             mob:setMobLevel(math.random(77, 80))
@@ -2734,7 +2741,7 @@ xi.dynamis.setMobStats = function(mob)
             mob:setMobLevel(math.random(77, 78))
         end
 
-        if     job == xi.job.WAR then
+        if job == xi.job.WAR then
             local params = {  }
             params.specials = {  }
             params.specials.skill = {  }
@@ -2831,6 +2838,7 @@ xi.dynamis.setMobStats = function(mob)
 
         xi.dynamis.addParentListeners(mob)
 
+        mob:setMobMod(xi.mobMod.CHARMABLE, 0)
         -- Add Check After Calcs
         mob:setMobMod(xi.mobMod.CHECK_AS_NM, 2)
     end
@@ -2855,6 +2863,8 @@ xi.dynamis.setNightmareStats = function(mob)
         else
             mob:setRoamFlags(xi.roamFlag.NONE)
         end
+
+        mob:setMobMod(xi.mobMod.CHARMABLE, 0)
     end
 end
 
@@ -2894,6 +2904,8 @@ xi.dynamis.setNMStats = function(mob)
         params.specials.skill.hpp = math.random(15, 25)
         xi.mix.jobSpecial.config(mob, params)
     end
+
+    mob:setMobMod(xi.mobMod.CHARMABLE, 0)
 end
 
 xi.dynamis.setStatueStats = function(mob, mobIndex)
@@ -2935,6 +2947,8 @@ xi.dynamis.setStatueStats = function(mob, mobIndex)
             mob:setLocalVar("eyeColor", xi.dynamis.eye.RED) -- Set Eyes if need be
         end
     end
+
+    mob:setMobMod(xi.mobMod.CHARMABLE, 0)
 end
 
 xi.dynamis.setMegaBossStats = function(mob)
@@ -2945,7 +2959,7 @@ xi.dynamis.setMegaBossStats = function(mob)
     mob:setMod(xi.mod.STR, -10)
     mob:setTrueDetection(true)
     xi.dynamis.setMDB(mob)
-
+    mob:setMobMod(xi.mobMod.CHARMABLE, 0)
     xi.dynamis.addParentListeners(mob)
 end
 
@@ -2957,10 +2971,10 @@ xi.dynamis.setPetStats = function(mob)
     mob:setMobType(xi.mobskills.mobType.BATTLEFIELD)
     mob:addStatusEffect(xi.effect.BATTLEFIELD, 1, 0, 0, true)
     mob:setMobMod(xi.mobMod.CHECK_AS_NM, 1)
-    mob:setMobMod(xi.mobMod.CHARMABLE, 0)
     mob:setMobLevel(79)
     mob:setTrueDetection(true)
     xi.dynamis.setMDB(mob)
+    mob:setMobMod(xi.mobMod.CHARMABLE, 0)
 end
 
 xi.dynamis.setAnimatedWeaponStats = function(mob)
@@ -2976,7 +2990,7 @@ xi.dynamis.setAnimatedWeaponStats = function(mob)
     mob:setMod(xi.mod.LULLABYRES, 100)
     mob:setMod(xi.mod.SLEEPRES, 100)
     mob:setMobMod(xi.mobMod.CHECK_AS_NM, 2)
-
+    mob:setMobMod(xi.mobMod.CHARMABLE, 0)
     xi.dynamis.addParentListeners(mob)
 end
 

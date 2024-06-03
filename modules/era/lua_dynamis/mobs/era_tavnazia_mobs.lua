@@ -26,6 +26,48 @@ local antlionPositions =
     { -21.65, -36, 18.61, 25 },
 }
 
+xi.dynamis.dynamisTavnaziaOnNewDynamis = function(player, zone)
+    zone:setLocalVar("nightmareWormArea", math.random(#wormPositions))
+    zone:setLocalVar("nightmareAntlionArea", math.random(#antlionPositions) + 5)
+end
+
+xi.dynamis.dynamisTavnaziaOnZoneInitializeEra = function(zone)
+    local i = 0
+
+    -- Creates a thin rectangular area centered around the spawn points in the table
+    for _, v in pairs(wormPositions) do
+        i = i + 1
+        zone:registerTriggerArea(i, wormPositions[i][1] - 5, -23, wormPositions[i][3] - 5, wormPositions[i][1] + 5, -22, wormPositions[i][3] + 5)
+    end
+
+    for _, v in pairs(antlionPositions) do
+        i = i + 1
+        zone:registerTriggerArea(i, antlionPositions[i - 5][1] - 5, -36, antlionPositions[i - 5][3] - 5, antlionPositions[i - 5][1] + 5, -35, antlionPositions[i - 5][3] + 5)
+    end
+end
+
+xi.dynamis.dynamisTavnaziaOnTriggerAreaEnter = function(player, triggerArea)
+    local zone = player:getZone()
+
+    if
+        zone:getLocalVar("nightmareWormSpawned") == 0 and
+        triggerArea:GetTriggerAreaID() == zone:getLocalVar("nightmareWormArea")
+    then
+        zone:setLocalVar("nightmareWormSpawned", 1)
+        -- spawn worm
+        xi.dynamis.nmDynamicSpawn(2, nil, true, xi.zone.DYNAMIS_TAVNAZIA, player)
+    end
+
+    if
+        zone:getLocalVar("nightmareAntlionSpawned") == 0 and
+        triggerArea:GetTriggerAreaID() == zone:getLocalVar("nightmareAntlionArea")
+    then
+        zone:setLocalVar("nightmareAntlionSpawned", 1)
+        -- spawn antlion
+        xi.dynamis.nmDynamicSpawn(3, nil, true, xi.zone.DYNAMIS_TAVNAZIA, player)
+    end
+end
+
 local firstEyes  = { "eyeOneKilled", "eyeTwoKilled" }
 local secondEyes = { "eyeThreeKilled", "eyeFourKilled" }
 
@@ -42,22 +84,10 @@ end
 xi.dynamis.onSpawnNightmareWorm = function(mob)
     xi.dynamis.setNMStats(mob)
     mob:setRoamFlags(xi.roamFlag.WORM)
-    -- This is sneaky.  All of our code checks animation sub 0 or 1 for worms.
-    -- 4 and 5 have the same functionality, but we want this worm to aggro, so we use 5
-    mob:setAnimationSub(5)
-    mob:hideName(true)
-    mob:setUntargetable(true)
-    local newPosition = math.random(1, #wormPositions)
-    mob:setPos(wormPositions[newPosition][1], wormPositions[newPosition][2], wormPositions[newPosition][3], wormPositions[newPosition][4])
 end
 
 xi.dynamis.onSpawnNightmareAntlion = function(mob)
     xi.dynamis.setNMStats(mob)
-    mob:setMobMod(xi.mobMod.ROAM_TURNS, 0)
-    mob:setMobMod(xi.mobMod.ROAM_RATE, 0)
-    mob:setMobMod(xi.mobMod.ROAM_DISTANCE, 0)
-    local newPosition = math.random(1, #antlionPositions)
-    mob:setPos(antlionPositions[newPosition][1], antlionPositions[newPosition][2], antlionPositions[newPosition][3], antlionPositions[newPosition][4])
 end
 
 xi.dynamis.onMobEngagedNightmareWorm = function(mob, target)
@@ -67,39 +97,49 @@ xi.dynamis.onMobEngagedNightmareWorm = function(mob, target)
 end
 
 xi.dynamis.tavQMSpawnCheck = function(mob, zone, zoneID)
+    local timeExtensionOneSpawned = zone:getLocalVar("timeExtensionOneSpawned")
+    local timeExtensionTwoSpawned = zone:getLocalVar("timeExtensionTwoSpawned")
     local timeNPCOne = GetNPCByID(xi.dynamis.dynaInfoEra[zoneID].timeExtensions[1])
     local timeNPCTwo = GetNPCByID(xi.dynamis.dynaInfoEra[zoneID].timeExtensions[2])
     local req = 0
     local reqT = 0
 
-    for _, eye in pairs(firstEyes) do
-        if zone:getLocalVar(eye) == 1 then
-            req = req + 1
+    if timeExtensionOneSpawned == 0 then
+        for _, eye in pairs(firstEyes) do
+            if zone:getLocalVar(eye) == 1 then
+                req = req + 1
+            end
         end
-    end
 
-    if req == 1 and timeNPCOne:getStatus() ~= xi.status.NORMAL then
-        local chance = math.random(1, 2)
-        if chance == 2 then
+        if req == 1 and timeNPCOne:getStatus() ~= xi.status.NORMAL then
+            local chance = math.random(1, 2)
+            if chance == 2 then
+                timeNPCOne:setStatus(xi.status.NORMAL) -- Make visible
+                zone:setLocalVar("timeExtensionOneSpawned", 1)
+            end
+        elseif req == 2 and timeNPCOne:getStatus() ~= xi.status.NORMAL then
             timeNPCOne:setStatus(xi.status.NORMAL) -- Make visible
-        end
-    elseif req == 2 and timeNPCOne:getStatus() ~= xi.status.NORMAL then
-        timeNPCOne:setStatus(xi.status.NORMAL) -- Make visible
-    end
-
-    for _, eye in pairs(secondEyes) do
-        if zone:getLocalVar(eye) == 1 then
-            reqT = reqT + 1
+            zone:setLocalVar("timeExtensionOneSpawned", 1)
         end
     end
 
-    if reqT == 1 and timeNPCTwo:getStatus() ~= xi.status.NORMAL then
-        local chance = math.random(1, 2)
-        if chance == 2 then
+    if timeExtensionTwoSpawned == 0 then
+        for _, eye in pairs(secondEyes) do
+            if zone:getLocalVar(eye) == 1 then
+                reqT = reqT + 1
+            end
+        end
+
+        if reqT == 1 and timeNPCTwo:getStatus() ~= xi.status.NORMAL then
+            local chance = math.random(1, 2)
+            if chance == 2 then
+                timeNPCTwo:setStatus(xi.status.NORMAL) -- Make visible
+                zone:setLocalVar("timeExtensionTwoSpawned", 1)
+            end
+        elseif reqT == 2 and timeNPCTwo:getStatus() ~= xi.status.NORMAL then
             timeNPCTwo:setStatus(xi.status.NORMAL) -- Make visible
+            zone:setLocalVar("timeExtensionTwoSpawned", 1)
         end
-    elseif reqT == 2 and timeNPCTwo:getStatus() ~= xi.status.NORMAL then
-        timeNPCTwo:setStatus(xi.status.NORMAL) -- Make visible
     end
 end
 
@@ -157,6 +197,8 @@ xi.dynamis.onMobEngagedUmbralDiabolos = function(mob, target)
         for _, member in pairs(zone:getPlayers()) do
             member:changeMusic(0, 239) -- 0 Background Music (Starlight Celebration Music)
             member:changeMusic(1, 239) -- 1 Background Music (Starlight Celebration Music)
+            member:changeMusic(2, 239) -- 2 Combat Music (Starlight Celebration Music)
+            member:changeMusic(3, 239) -- 3 Combat Music (Starlight Celebration Music)
         end
     end
 
@@ -311,14 +353,48 @@ end
 
 xi.dynamis.onMobWeaponSkillDiabolosDiamond = function(target, mob, skill)
     -- Nightmare was used - the fun begins
-    if skill:getID() == 1908 then
+    if
+        skill:getID() == 1908 and
+        mob:getLocalVar("DayDreamsLeft") == 0
+    then
         -- Needs more info
         -- Reported to get stronger the more times nightmare happens.
         -- Video evidence showed 5 charms at low HP https://youtu.be/Bvp-T3_U7xA?t=74
-        local numDaydreams = 5 --math.min(10 - (mob:getHPP() % 10), 5)
-        for i = 0, numDaydreams do
-            mob:useMobAbility(1919)
-        end
+        mob:setLocalVar("DayDreamsLeft", 5)
+        mob:queue(1000, function(mobArg)
+                if mobArg:isDead() then
+                    return
+                end
+
+                local dayDreamTarget = mobArg:getTarget()
+                if dayDreamTarget:isPet() then
+                    dayDreamTarget = dayDreamTarget:getMaster()
+                end
+
+                mobArg:triggerDrawIn(mobArg, false, 20, nil, dayDreamTarget)
+                mobArg:useMobAbility(1919, dayDreamTarget)
+            end)
+    end
+
+    if
+        skill:getID() == 1919 and
+        mob:getLocalVar("DayDreamsLeft") > 0
+    then
+        mob:setLocalVar("DayDreamsLeft", mob:getLocalVar("DayDreamsLeft") - 1)
+        -- duplicated code, could be pulled into a local fcn
+        mob:queue(1000, function(mobArg)
+                if mobArg:isDead() then
+                    return
+                end
+
+                local dayDreamTarget = mobArg:getTarget()
+                if dayDreamTarget:isPet() then
+                    dayDreamTarget = dayDreamTarget:getMaster()
+                end
+
+                mobArg:triggerDrawIn(mobArg, false, 20, nil, dayDreamTarget)
+                mobArg:useMobAbility(1919, dayDreamTarget)
+            end)
     end
 end
 
@@ -328,6 +404,7 @@ xi.dynamis.onSpawnDiabolosShard = function(mob)
 end
 
 xi.dynamis.onMobFightDiabolosShard = function(mob, mobTarget)
+    --- if (distance(mobTarget, mob) < 5)
     mob:useMobAbility(1903)
 end
 
@@ -345,31 +422,53 @@ xi.dynamis.mobOnDeathDiabolos = function(mob, player, optParams)
     end
 
     local allDead = true
+    mob:getID()
 
-    local aliveDiabolos = {}
-    if zone:getLocalVar("DiabolosClub") > 0 then
-        table.insert(aliveDiabolos, GetMobByID(zone:getLocalVar("DiabolosClub")))
+    -- Dynamic IDs - cannot trust a mob's ID outside the scope of its life
+    -- So we require another layer of indirection for persistence
+    if mob:getID() == zone:getLocalVar("DiabolosClub") then
+        zone:setLocalVar("DiabolosClubDeath", 1)
     end
 
-    if zone:getLocalVar("DiabolosHeart") > 0 then
-        table.insert(aliveDiabolos, GetMobByID(zone:getLocalVar("DiabolosHeart")))
+    if mob:getID() == zone:getLocalVar("DiabolosHeart") then
+        zone:setLocalVar("DiabolosHeartDeath", 1)
     end
 
-    if zone:getLocalVar("DiabolosSpade") > 0 then
-        table.insert(aliveDiabolos, GetMobByID(zone:getLocalVar("DiabolosSpade")))
+    if mob:getID() == zone:getLocalVar("DiabolosSpade") then
+        zone:setLocalVar("DiabolosSpadeDeath", 1)
     end
 
-    if zone:getLocalVar("DiabolosDiamond") > 0 then
-        table.insert(aliveDiabolos, GetMobByID(zone:getLocalVar("DiabolosDiamond")))
+    if mob:getID() == zone:getLocalVar("DiabolosDiamond") then
+        zone:setLocalVar("DiabolosDiamondDeath", 1)
     end
 
-    for _, v in pairs(aliveDiabolos) do
-        if
-            v ~= nil and
-            v:isAlive()
-        then
-            allDead = false
-        end
+    -- Check that each mob is dead
+    if
+        zone:getLocalVar("DiabolosClub") > 0 and
+        zone:getLocalVar("DiabolosClubDeath") == 0
+    then
+        allDead = false
+    end
+
+    if
+        zone:getLocalVar("DiabolosHeart") > 0 and
+        zone:getLocalVar("DiabolosHeartDeath") == 0
+    then
+        allDead = false
+    end
+
+    if
+        zone:getLocalVar("DiabolosSpade") > 0 and
+        zone:getLocalVar("DiabolosSpadeDeath") == 0
+    then
+        allDead = false
+    end
+
+    if
+        zone:getLocalVar("DiabolosDiamond") > 0 and
+        zone:getLocalVar("DiabolosDiamondDeath") == 0
+    then
+        allDead = false
     end
 
     if allDead then
@@ -387,48 +486,85 @@ xi.dynamis.mobOnDeathDiabolos = function(mob, player, optParams)
 end
 
 xi.dynamis.onMobEngagedDiabolos = function(mob, mobTarget)
+    local zone = mob:getZone()
     mob:setLocalVar("hasEngaged", 1)
+    if mob:getID() == zone:getLocalVar("DiabolosClub") then
+        zone:setLocalVar("DiabolosClubEngaged", 1)
+    end
+
+    if mob:getID() == zone:getLocalVar("DiabolosHeart") then
+        zone:setLocalVar("DiabolosHeartEngaged", 1)
+    end
+
+    if mob:getID() == zone:getLocalVar("DiabolosSpade") then
+        zone:setLocalVar("DiabolosSpadeEngaged", 1)
+    end
+
+    if mob:getID() == zone:getLocalVar("DiabolosDiamond") then
+        zone:setLocalVar("DiabolosDiamondEngaged", 1)
+    end
 end
 
 xi.dynamis.onMobRoamDiabolos = function(mob)
+    local zone = mob:getZone()
+    local noHate = true
+
+    -- do nothing if never engaged
     if mob:getLocalVar("hasEngaged") == 0 then
         return
     end
 
-    local zone = mob:getZone()
-    local noHate = true
-    local spawnedDiabolos = {}
-    if zone:getLocalVar("DiabolosClub") > 0 then
-        table.insert(spawnedDiabolos, GetMobByID(zone:getLocalVar("DiabolosClub")))
+    -- set engaged variables
+    if mob:getID() == zone:getLocalVar("DiabolosClub") then
+        zone:setLocalVar("DiabolosClubEngaged", 0)
     end
 
-    if zone:getLocalVar("DiabolosHeart") > 0 then
-        table.insert(spawnedDiabolos, GetMobByID(zone:getLocalVar("DiabolosHeart")))
+    if mob:getID() == zone:getLocalVar("DiabolosHeart") then
+        zone:setLocalVar("DiabolosHeartEngaged", 0)
     end
 
-    if zone:getLocalVar("DiabolosSpade") > 0 then
-        table.insert(spawnedDiabolos, GetMobByID(zone:getLocalVar("DiabolosSpade")))
+    if mob:getID() == zone:getLocalVar("DiabolosSpade") then
+        zone:setLocalVar("DiabolosSpadeEngaged", 0)
     end
 
-    if zone:getLocalVar("DiabolosDiamond") > 0 then
-        table.insert(spawnedDiabolos, GetMobByID(zone:getLocalVar("DiabolosDiamond")))
+    if mob:getID() == zone:getLocalVar("DiabolosDiamond") then
+        zone:setLocalVar("DiabolosDiamondEngaged", 0)
     end
 
-    for _, v in pairs(spawnedDiabolos) do
-        if
-            v ~= nil and
-            v:isEngaged()
-        then
-            noHate = false
-        end
+    -- Check all for hate
+    if
+        zone:getLocalVar("DiabolosClub") > 0 and
+        zone:getLocalVar("DiabolosDiamondEngaged") == 1
+    then
+        noHate = false
     end
 
-    mob:messageText(mob, ID.text.NOW_I_WILL_JOIN_THEM)
+    if
+        zone:getLocalVar("DiabolosHeart") > 0 and
+        zone:getLocalVar("DiabolosClubEngaged") == 1
+    then
+        noHate = false
+    end
+
+    if
+        zone:getLocalVar("DiabolosSpade") > 0 and
+        zone:getLocalVar("DiabolosSpadeEngaged") == 1
+    then
+        noHate = false
+    end
+
+    if
+        zone:getLocalVar("DiabolosDiamond") > 0 and
+        zone:getLocalVar("DiabolosDiamondEngaged") == 1
+    then
+        noHate = false
+    end
 
     if noHate then
-        for _, v in pairs(spawnedDiabolos) do
-            DespawnMob(v:getID())
-        end
+        mob:messageText(mob, ID.text.NOW_I_WILL_JOIN_THEM)
+
+        -- this will trigger on each on roam
+        DespawnMob(mob:getID())
 
         for i = 106, 109 do
             local mobID = zone:getLocalVar(string.format("%s", i))

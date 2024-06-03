@@ -1342,10 +1342,10 @@ INSERT INTO `mob_groups` VALUES (24,2114,35,'Ixzdei_BLM',0,128,0,6500,0,78,78,0)
 INSERT INTO `mob_groups` VALUES (25,2131,35,'Jailer_of_Fortitude',0,128,1397,25000,0,79,80,0);
 INSERT INTO `mob_groups` VALUES (26,2215,35,'Kfghrah_whm',0,128,0,9000,0,77,77,0);
 INSERT INTO `mob_groups` VALUES (27,4659,35,'Kfghrah_blm',0,128,0,9000,0,77,77,0);
-INSERT INTO `mob_groups` VALUES (28,4660,35,'Ixaern_drk',0,128,2844,21000,0,82,87,0);
+INSERT INTO `mob_groups` VALUES (28,4660,35,'Ixaern_drk',0,128,2844,9300,0,82,87,0);
 INSERT INTO `mob_groups` VALUES (29,5549,35,'Qnaern_rng',0,128,0,0,0,80,82,0);
 INSERT INTO `mob_groups` VALUES (30,2130,35,'Jailer_of_Faith',0,128,1396,18000,0,85,85,0);
-INSERT INTO `mob_groups` VALUES (31,2112,35,'Ixaern_drg',0,128,2843,21000,0,82,87,0);
+INSERT INTO `mob_groups` VALUES (31,2112,35,'Ixaern_drg',0,128,2843,13570,0,82,87,0);
 INSERT INTO `mob_groups` VALUES (32,5536,35,'Ixaern_drgs_Wynav',0,128,0,0,0,78,79,0);
 INSERT INTO `mob_groups` VALUES (33,7039,35,'Ixzdei_RDM',0,128,0,6500,0,78,78,0);
 
@@ -10902,7 +10902,7 @@ INSERT INTO `mob_groups` VALUES (2,6770,159,'Bloodsucker_fished',0,128,174,0,0,5
 INSERT INTO `mob_groups` VALUES (3,6782,159,'Bouncing_Ball_fished',0,128,343,0,0,65,67,0);
 
 INSERT INTO `mob_groups` VALUES (4,501,159,'Bonze_Marberry',900,0,338,7000,0,66,66,0);
-INSERT INTO `mob_groups` VALUES (5,4039,159,'Trompe_LOeil',0,128,0,0,0,60,60,0);
+INSERT INTO `mob_groups` VALUES (5,4039,159,'Trompe_LOeil',0,128,0,19500,0,60,60,0);
 INSERT INTO `mob_groups` VALUES (6,787,159,'Cook_Solberry',0,128,0,0,0,75,75,0);
 INSERT INTO `mob_groups` VALUES (7,786,159,'Cook_Nalberry',0,128,0,0,0,75,75,0);
 INSERT INTO `mob_groups` VALUES (8,785,159,'Cook_Minberry',0,128,0,0,0,75,75,0);
@@ -13226,7 +13226,7 @@ INSERT INTO `mob_groups` VALUES (75,4006,206,'Trion',0,128,0,0,0,75,75,1); -- al
 -- Cloister_of_Flames (Zone 207)
 -- ------------------------------------------------------------
 
-INSERT INTO `mob_groups` VALUES (1,4645,207,'Ifrit_Prime_TBF',0,128,0,7650,0,60,60,0);
+INSERT INTO `mob_groups` VALUES (1,2050,207,'Ifrit_Prime_TBF',0,128,0,7650,0,60,60,0);
 INSERT INTO `mob_groups` VALUES (2,7052,207,'Ifrit_Prime_TSTBF',0,128,0,700,0,20,20,0);
 INSERT INTO `mob_groups` VALUES (3,4645,207,'Ifrit_Prime_WTB',0,128,0,27000,0,85,85,0);
 INSERT INTO `mob_groups` VALUES (4,1341,207,'Fire_Elemental',0,128,0,3000,0,75,75,0);
@@ -13310,7 +13310,7 @@ INSERT INTO `mob_groups` VALUES (5,20001,210,'Garrison_75',0,129,0,0,0,70,75,1);
 -- Cloister_of_Tides (Zone 211)
 -- ------------------------------------------------------------
 
-INSERT INTO `mob_groups` VALUES (1,4646,211,'Leviathan_Prime_TBW',0,128,0,9500,0,60,60,0);
+INSERT INTO `mob_groups` VALUES (1,2402,211,'Leviathan_Prime_TBW',0,128,0,9500,0,60,60,0);
 INSERT INTO `mob_groups` VALUES (2,7054,211,'Leviathan_Prime_TSTBW',0,128,0,700,0,20,20,0);
 INSERT INTO `mob_groups` VALUES (3,4646,211,'Leviathan_Prime_WTB',0,128,0,27000,0,85,85,0);
 INSERT INTO `mob_groups` VALUES (4,4309,211,'Water_Elemental',0,128,0,3000,0,75,75,0);
